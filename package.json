@@ -7,7 +7,9 @@
   "main": "dist/page-object.cjs.js",
   "module": "dist/page-object.esm.js",
   "browser": "dist/page-object.umd.js",
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "devDependencies": {
     "@babel/core": "^7.7.5",
     "@babel/plugin-proposal-class-properties": "^7.7.4",
@@ -23,10 +25,14 @@
   },
   "scripts": {
     "build": "rollup -c",
-    "test": "jest"
+    "test": "jest",
+    "validate": "yarn test & yarn build"
   },
   "dependencies": {
     "react": "^16.12.0",
     "react-dom": "^16.12.0"
+  },
+  "peerDependencies": {
+    "react-addons-test-utils": "^15.6.2"
   }
 }

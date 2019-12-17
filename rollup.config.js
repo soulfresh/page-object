@@ -29,7 +29,7 @@ export default [
   // `file` and `format` for each target)
   {
     input: 'src/PageObject.js',
-    external: ['ms'],
+    external: ['react-dom', 'react-dom/test-utils'],
     output: [
       { file: pkg.main, format: 'cjs' },
       { file: pkg.module, format: 'es' }

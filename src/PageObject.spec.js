@@ -1,6 +1,7 @@
 import React from 'react';
 
-import PageObject, { PageSelector } from './PageObject';
+import PageObject from './PageObject';
+import PageSelector from './PageSelector';
 
 const selectors = {
   container: '[data-test=root]',

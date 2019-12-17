@@ -1,2 +1,2 @@
 # page-object
-Page Objects for fast, reusable test helpers.
+Page Objects for fast, reusable test interactions.

@@ -1,5 +1,5 @@
 {
-  "name": "page-object",
+  "name": "page-o",
   "version": "0.0.1",
   "repository": "git@github.com:soulfresh/page-object.git",
   "author": "Marc Wren",
@@ -26,8 +26,7 @@
     "test": "jest",
     "develop": "yarn build -w",
     "validate": "yarn test & yarn build",
-    "prepublish": "yarn validate"
+    "prepublish": "yarn build"
   },
-  "dependencies": {
-  }
+  "dependencies": {}
 }

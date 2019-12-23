@@ -11,10 +11,12 @@ import PageSelector from './PageSelector';
  * @param {string} prop - The selector we are looking for.
  */
 function getSelector(target, prop) {
-  if (!target.selectors) {
+  if (!target.allSelectors) {
     throw new Error(
-      `"${target.constructor.name}.selectors" does not exist. ` +
-      'Make sure your PageObject defines a selectors property.'
+      `"${target.constructor.name}.selectors" and ` +
+      `"${target.constructor.name}.additionalSelectors" do not exist. ` +
+      'Make sure your PageObject defines a selectors property or ' + 
+      'passes additional selectors to the constructor.'
     );
   }
   const selector = target.allSelectors[prop];

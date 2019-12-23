@@ -23,6 +23,25 @@ class ExamplePageObject extends PageObject {
 }
 
 describe('PageObject', function() {
+  let page;
+
+  beforeEach(function() {
+    page = new PageObject(null, selectors);
+    page.render(
+      <div data-test="root"></div>
+    );
+  });
+
+  afterEach(function() {
+    page.destroySandbox();
+  });
+
+  it('should render the component.', () => {
+    expect(page.container.exists).toBe(true);
+  });
+});
+
+describe('PageObject subclass', function() {
   let page, onClick, onSubmit, onChange, onFocus, onMount, onUnmount;
   const paragraph = 'This is paragraph text.';
 

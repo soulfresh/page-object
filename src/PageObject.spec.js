@@ -14,6 +14,7 @@ const selectors = {
   submitInput: '[data-test=submitInput]',
   p: 'p',
   fake: 'fake',
+  exampleComponent: '[data-test=exampleComponent]',
 };
 
 class ExamplePageObject extends PageObject {
@@ -21,8 +22,16 @@ class ExamplePageObject extends PageObject {
 }
 
 describe('PageObject', function() {
-  let page, onClick, onSubmit, onChange, onFocus;
+  let page, onClick, onSubmit, onChange, onFocus, onMount, onUnmount;
   const paragraph = 'This is paragraph text.';
+
+  function ExampleComponent() {
+    React.useEffect(() => {
+      onMount();
+      return () => onUnmount();
+    });
+    return <div data-test="exampleComponent">Component</div>
+  }
 
   beforeEach(function() {
     page = new ExamplePageObject();
@@ -33,10 +42,12 @@ describe('PageObject', function() {
   });
 
   beforeEach(function() {
-    onClick = jasmine.createSpy('onClick');
-    onSubmit = jasmine.createSpy('onSubmit');
-    onChange = jasmine.createSpy('onChange');
-    onFocus = jasmine.createSpy('onFocus');
+    onClick   = jasmine.createSpy('onClick');
+    onSubmit  = jasmine.createSpy('onSubmit');
+    onChange  = jasmine.createSpy('onChange');
+    onFocus   = jasmine.createSpy('onFocus');
+    onMount   = jasmine.createSpy('onMount');
+    onUnmount = jasmine.createSpy('onUnmount');
 
     page.render(
       <div data-test="root">
@@ -52,6 +63,7 @@ describe('PageObject', function() {
           <button data-test="submitButton" onClick={onClick} />
         </form>
         <p>{ paragraph }</p>
+        <ExampleComponent />
       </div>
     );
   });
@@ -132,6 +144,12 @@ describe('PageObject', function() {
   it('should be able to submit a form directly.', () => {
     page.submit();
     expect(onSubmit).toHaveBeenCalled();
+  });
+
+  it('should be able to unmount a component.', () => {
+    expect(onUnmount).not.toHaveBeenCalled();
+    page.unmount(page.exampleComponent.element);
+    expect(onUnmount).toHaveBeenCalled();
   });
 
   // TODO Remaining tests:

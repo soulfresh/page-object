@@ -170,8 +170,6 @@ export default class PageObject {
     this.sandbox = null;
     this.additionalSelectors = selectors;
 
-    this.unmount = unmount;
-
     this.sandboxIds = {
       root: 'sandbox-root',
       app: 'sandbox-app',
@@ -248,10 +246,11 @@ export default class PageObject {
     this.sandbox.appendChild(this.sandboxApp);
     document.body.appendChild(this.sandbox);
 
-    const {container, rerender} = render(definition, {
+    const {container, rerender, unmount} = render(definition, {
       container: this.sandboxApp,
     });
 
+    this.unmount = unmount;
     this.rerender = rerender;
 
     return this.sandboxApp;

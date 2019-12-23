@@ -15,12 +15,12 @@ export default [
       {
         file: pkg.main,
         format: 'cjs',
-        sourcemap: true,
+        sourcemap: 'inline',
       },
       {
         file: pkg.module,
         format: 'es',
-        sourcemap: true,
+        sourcemap: 'inline',
       }
     ],
     plugins: [

@@ -14,8 +14,11 @@
     "@babel/plugin-proposal-class-properties": "^7.7.4",
     "@babel/preset-env": "^7.7.6",
     "@babel/preset-react": "^7.7.4",
+    "@testing-library/react": "^9.4.0",
     "babel-jest": "^24.9.0",
     "jest": "^24.9.0",
+    "react": "^16.12.0",
+    "react-dom": "^16.12.0",
     "rollup": "^1.27.13",
     "rollup-plugin-babel": "^4.3.3",
     "rollup-plugin-commonjs": "^10.1.0",
@@ -23,10 +26,16 @@
   },
   "scripts": {
     "build": "rollup -c",
-    "test": "jest",
+    "test": "jest --watch",
+    "test-ci": "jest",
     "develop": "yarn build -w",
-    "validate": "yarn test & yarn build",
+    "validate": "yarn test-ci & yarn build",
     "prepublish": "yarn build"
   },
-  "dependencies": {}
+  "dependencies": {},
+  "peerDependencies": {
+    "@testing-library/react": "*",
+    "react": "*",
+    "react-dom": "*"
+  }
 }

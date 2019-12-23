@@ -1,4 +1,4 @@
-import { render, fireEvent } from '@testing-library/react';
+import { render, unmount, fireEvent } from '@testing-library/react';
 import PageSelector from './PageSelector';
 
 /*
@@ -271,6 +271,11 @@ export default class PageObject {
       this.sandboxApp = null;
     }
   }
+
+  /*
+   * Unmount the react component associated with a DOM node.
+   */
+  unmount = unmount;
 
   makeStyleElement() {
     let node = document.createElement('style');

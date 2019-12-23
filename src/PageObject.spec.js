@@ -21,7 +21,7 @@ class ExamplePageObject extends PageObject {
 }
 
 describe('PageObject', function() {
-  let page, onClick, onSubmit, onChange;
+  let page, onClick, onSubmit, onChange, onFocus;
   const paragraph = 'This is paragraph text.';
 
   beforeEach(function() {
@@ -36,6 +36,7 @@ describe('PageObject', function() {
     onClick = jasmine.createSpy('onClick');
     onSubmit = jasmine.createSpy('onSubmit');
     onChange = jasmine.createSpy('onChange');
+    onFocus = jasmine.createSpy('onFocus');
 
     page.render(
       <div data-test="root">
@@ -44,7 +45,7 @@ describe('PageObject', function() {
           Click Me
         </button>
         <form data-test="form1" onSubmit={onSubmit}>
-          <input type="text" onChange={onChange} />
+          <input type="text" onChange={onChange} onFocus={onFocus} />
           <input type="submit" data-test="submitInput" value="Submit" />
         </form>
         <form data-test="form2" onSubmit={onSubmit}>
@@ -107,6 +108,8 @@ describe('PageObject', function() {
   });
 
   it('should trigger a submit when clicking on a submit button.', () => {
+    // prevent JSDOM from logging an error that 'SUBMIT' is not implemented.
+    spyOn(console, 'error');
     page.submitButton.click();
     expect(onSubmit).toHaveBeenCalled();
   });
@@ -116,9 +119,9 @@ describe('PageObject', function() {
     expect(onSubmit).toHaveBeenCalled();
   });
 
-  it('should fire a change event when clicking on an input.', () => {
+  it('should fire a focus event when clicking on an input.', () => {
     page.input.click();
-    expect(onChange).toHaveBeenCalled();
+    expect(onFocus).toHaveBeenCalled();
   });
 
   it('should be able to submit a form through the proxy.', () => {

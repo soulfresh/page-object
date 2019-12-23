@@ -1,4 +1,4 @@
-import ReactTestUtils from 'react-dom/test-utils';
+import { fireEvent } from '@testing-library/react';
 
 /*
  * An object that is configured to interact with a specific
@@ -143,8 +143,7 @@ export default class PageSelector {
     if (el) {
       const tag = el.tagName;
       if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT') {
-        el.value = value;
-        ReactTestUtils.Simulate.change(el);
+        fireEvent.change(el, { target: { value } });
         return;
       } else {
         console.error(`Cannot set the value of a non-input element. Tried to set ${this.selector} to ${value}.`);
@@ -188,7 +187,7 @@ export default class PageSelector {
   simulateAction(action, element) {
     const el = element || this.element;
     if (el) {
-      ReactTestUtils.Simulate[action](el);
+      fireEvent[action](el);
       return true;
     }
 
@@ -203,13 +202,13 @@ export default class PageSelector {
     switch (el.tagName) {
       case 'INPUT':
         if (el.type !== 'submit') {
-          return this.simulateAction('change', el);
+          return this.simulateAction('focus', el);
         } else {
           return this.simulateAction('submit', el);
         }
       case 'BUTTON':
         if (el.type === 'submit') {
-          return this.simulateAction('submit', el);
+          return this.simulateAction('click', el);
         } else {
           return this.simulateAction('click', el);
         }
@@ -250,7 +249,7 @@ export default class PageSelector {
    * Press the enter key while the current element is focused.
    */
   pressEnter() {
-    ReactTestUtils.Simulate.keyDown(this.element, {keyCode: 13});
-    ReactTestUtils.Simulate.keyUp(this.element, {keyCode: 13});
+   fireEvent.keyDown(this.element, {keyCode: 13});
+   fireEvent.keyUp(this.element, {keyCode: 13});
   }
 }

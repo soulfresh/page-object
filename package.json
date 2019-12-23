@@ -6,7 +6,6 @@
   "license": "MIT",
   "main": "dist/page-object.cjs.js",
   "module": "dist/page-object.esm.js",
-  "browser": "dist/page-object.umd.js",
   "files": [
     "dist"
   ],
@@ -17,7 +16,6 @@
     "@babel/preset-react": "^7.7.4",
     "babel-jest": "^24.9.0",
     "jest": "^24.9.0",
-    "react-test-renderer": "^16.12.0",
     "rollup": "^1.27.13",
     "rollup-plugin-babel": "^4.3.3",
     "rollup-plugin-commonjs": "^10.1.0",
@@ -26,13 +24,10 @@
   "scripts": {
     "build": "rollup -c",
     "test": "jest",
-    "validate": "yarn test & yarn build"
+    "develop": "yarn build -w",
+    "validate": "yarn test & yarn build",
+    "prepublish": "yarn validate"
   },
   "dependencies": {
-    "react": "^16.12.0",
-    "react-dom": "^16.12.0"
-  },
-  "peerDependencies": {
-    "react-addons-test-utils": "^15.6.2"
   }
 }

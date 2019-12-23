@@ -1,5 +1,4 @@
-import ReactDOM from 'react-dom';
-import ReactTestUtils from 'react-dom/test-utils';
+import { render, fireEvent } from '@testing-library/react';
 import PageSelector from './PageSelector';
 
 /*
@@ -61,18 +60,20 @@ function getRoot(target) {
  *
  *
  * Usage:
- * Generally, you will want to create a custom PageObject specific to the
+ * Generally, it's a good practice to create a custom PageObject specific to the
  * component/page you are testing.
  *
  * ```js
- * class MyPageObject extends PageObject {
- *   selectors = {
- *     title: '[data-test=myTitle]',
- *     form: '[name=myForm]',
- *     input: 'input',
- *     button: 'button.submit',
- *     other: '.other',
- *   }
+ * export const selectors = {
+ *   title: '[data-test=myTitle]',
+ *   form: '[name=myForm]',
+ *   input: 'input',
+ *   button: 'button.submit',
+ *   other: '.other',
+ * };
+ *
+ * export class MyPageObject extends PageObject {
+ *   selectors = selectors;
  * }
  * ```
  *
@@ -102,7 +103,7 @@ function getRoot(target) {
  * ```js
  * it('should have rendered the component.', () => {
  *   // Here we test an element reference in the DOM.
- *   expect(page.title.element).toEqual(page.root.querySelector(page.selectors.title);
+ *   expect(page.title.element).toEqual(page.root.querySelector(page.selectors.title));
  *
  *   // Your PageObject has getters for each of it's
  *   // selectors (properties on MyPageObject.selectors).
@@ -157,8 +158,6 @@ function getRoot(target) {
  *   page.submit.myForm();
  * });
  * ```
- *
- * Composition:
  */
 export default class PageObject {
   /*
@@ -170,6 +169,12 @@ export default class PageObject {
     this._root = root;
     this.sandbox = null;
     this.additionalSelectors = selectors;
+
+    this.sandboxIds = {
+      root: 'sandbox-root',
+      app: 'sandbox-app',
+      styles: 'sandbox-styles',
+    };
 
     return new Proxy(this, {
       get(target, prop, receiver) {
@@ -211,38 +216,43 @@ export default class PageObject {
    * exist, it will be created for you.
    *
    * @param {JSX} definition The component JSX to render.
-   * @param {Function} [done] A callback that will be called after
-   *   the component has been rendered by ReactDOM.
    * @param {string} [styles] A CSS string to add test specific
    *   styles to the sandbox. These styles will be removed when
    *   the sandbox is destroyed.
-   * @param {boolean} [reuse=false] False = create a fresh sandbox DOM.
-   *   True = reuse the existing sandbox.
-   * @param {HTMLElement} [parent] The parent into which the component
-   *   will be rendered. Defaults to the sandbox root.
+   * @param {string} [additionalDOM] - An HTML string representing
+   *   additional DOM elements that need to be rendered alongside
+   *   (as opposed to wrapping) the component under test.
    */
-  render(definition, done, styles=null, reuse=false, parent=null) {
-    if (!reuse) {
-      this.prepareSandbox(reuse);
-    }
-
+  render(definition, styles=null, additionalDOM) {
     if (styles) {
       this.setStyles(styles);
     }
 
-    parent = parent || this.sandbox;
+    // The root sandbox where all DOM elements for each test are created.
+    this.sandbox = document.createElement('div');
+    this.sandbox.setAttribute('id', this.sandboxIds.root);
 
-    ReactTestUtils.act(() => {
-      ReactDOM.render(definition, parent, done);
+    // The sandbox where the component under test is created.
+    this.sandboxApp = document.createElement('div');
+    this.sandboxApp.setAttribute('id', this.sandboxIds.app);
+
+    // Make sure we do this first incase the component under test
+    // requires it's existance at construction time.
+    if (additionalDOM) {
+      // Additional DOM to be rendered alongside the component under test.
+      this.sandbox.innerHTML = additionalDOM;
+    }
+
+    this.sandbox.appendChild(this.sandboxApp);
+    document.body.appendChild(this.sandbox);
+
+    const {container, rerender} = render(definition, {
+      container: this.sandboxApp,
     });
-  }
 
-  /*
-   * Re-render an existing component; for example when you want to
-   * change it's props.
-   */
-  rerender(definition, done, parent=null) {
-    this.render(definition, done, undefined, true, parent);
+    this.rerender = rerender;
+
+    return this.sandboxApp;
   }
 
   /*
@@ -252,22 +262,25 @@ export default class PageObject {
   destroySandbox() {
     this.removeStyles();
 
+    // Remove all sandbox elements.
+    document.querySelectorAll(`#${this.sandboxIds.root}`)
+      .forEach((node) => node.remove());
+
     if (this.sandbox) {
-      ReactDOM.unmountComponentAtNode(this.sandbox);
-      this.sandbox.remove();
       this.sandbox = null;
+      this.sandboxApp = null;
     }
   }
 
   makeStyleElement() {
     let node = document.createElement('style');
-    node.setAttribute('id', 'floorplan-styles');
+    node.setAttribute('id', this.sandboxIds.styles);
     document.body.appendChild(node);
     return node;
   }
 
   getStyleElement() {
-    return document.body.querySelector('#floorplan-styles');
+    return document.body.querySelector(`#${this.sandboxIds.styles}`);
   }
 
   setStyles(str) {
@@ -280,17 +293,8 @@ export default class PageObject {
   }
 
   removeStyles() {
-    let node = this.getStyleElement();
-    if (node) {
-      node.remove();
-    }
-  }
-
-  prepareSandbox() {
-    this.destroySandbox();
-    this.sandbox = document.createElement('div');
-    this.sandbox.setAttribute('id', 'sandbox-root');
-    document.body.appendChild(this.sandbox);
+    document.body.querySelectorAll(`#${this.sandboxIds.styles}`)
+      .forEach((node) => node.remove());
   }
 
   select(selector) {
@@ -306,7 +310,7 @@ export default class PageObject {
    */
   submit() {
     const form = this.root.querySelector('form');
-    ReactTestUtils.Simulate.submit(form);
+    fireEvent.submit(form);
   }
 
   /*
@@ -323,14 +327,14 @@ export default class PageObject {
    */
   setInputValue(value, input) {
     input.value = value;
-    ReactTestUtils.Simulate.change(input);
+    fireEvent.change(input);
   }
 
   /*
    * Simulate a click event on an elment.
    */
   clickElement(element) {
-    ReactTestUtils.Simulate.click(element);
+    fireEvent.click(element);
   }
 
   dispatchEvent(element, eventName, eventConstructor = CustomEvent, options = {}) {

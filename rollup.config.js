@@ -3,23 +3,35 @@ import commonjs from 'rollup-plugin-commonjs';
 import babel from 'rollup-plugin-babel';
 import pkg from './package.json';
 
+const globals = {
+  '@testing-library/react': 'TestingLibrary'
+};
+
 export default [
   // browser-friendly UMD build
-  {
-    input: 'src/PageObject.js',
-    output: {
-      name: 'page-object',
-      file: pkg.browser,
-      format: 'umd'
-    },
-    plugins: [
-      resolve(),
-      commonjs(),
-      babel({
-        exclude: ['node_modules/**']
-      })
-    ]
-  },
+  // {
+  //   input: 'src/PageObject.js',
+  //   external: ['@testing-library/react'],
+  //   output: {
+  //     name: 'page-object',
+  //     file: pkg.browser,
+  //     format: 'umd',
+  //   },
+  //   plugins: [
+  //     resolve({
+  //       // pass custom options to the resolve plugin
+  //       customResolveOptions: {
+  //         moduleDirectory: 'node_modules'
+  //       }
+  //     }),
+  //     commonjs(
+  //       // { '@testing-library/react': ['act'] }
+  //     ),
+  //     babel({
+  //       exclude: ['node_modules/**']
+  //     })
+  //   ]
+  // },
 
   // CommonJS (for Node) and ES module (for bundlers) build.
   // (We could have three entries in the configuration array
@@ -29,10 +41,16 @@ export default [
   // `file` and `format` for each target)
   {
     input: 'src/PageObject.js',
-    external: ['react-dom', 'react-dom/test-utils'],
+    external: ['@testing-library/react'],
     output: [
-      { file: pkg.main, format: 'cjs' },
-      { file: pkg.module, format: 'es' }
+      {
+        file: pkg.main,
+        format: 'cjs',
+      },
+      {
+        file: pkg.module,
+        format: 'es',
+      }
     ],
     plugins: [
       babel({

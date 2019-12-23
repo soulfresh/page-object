@@ -170,6 +170,8 @@ export default class PageObject {
     this.sandbox = null;
     this.additionalSelectors = selectors;
 
+    this.unmount = unmount;
+
     this.sandboxIds = {
       root: 'sandbox-root',
       app: 'sandbox-app',
@@ -271,11 +273,6 @@ export default class PageObject {
       this.sandboxApp = null;
     }
   }
-
-  /*
-   * Unmount the react component associated with a DOM node.
-   */
-  unmount = unmount;
 
   makeStyleElement() {
     let node = document.createElement('style');

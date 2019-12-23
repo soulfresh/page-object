@@ -1,4 +1,4 @@
-import { fireEvent } from '@testing-library/react';
+import { fireEvent, waitForElement } from '@testing-library/react';
 
 /*
  * An object that is configured to interact with a specific
@@ -215,6 +215,10 @@ export default class PageSelector {
       default:
         return this.simulateAction('click', el);
     }
+  }
+
+  [ 'await' ]() {
+    return waitForElement(() => this.element);
   }
 
   /*

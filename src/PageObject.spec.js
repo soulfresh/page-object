@@ -152,6 +152,16 @@ describe('PageObject', function() {
     expect(onUnmount).toHaveBeenCalled();
   });
 
+  describe('waiting', function() {
+    beforeEach(function() {
+      return page.exampleComponent.await();
+    });
+
+    it('should be able to wait for elements on the page.', () => {
+      expect(page.exampleComponent.exists).toBe(true);
+    });
+  });
+
   // TODO Remaining tests:
   // pressEnter
   // clickNth

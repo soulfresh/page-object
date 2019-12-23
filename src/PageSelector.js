@@ -124,6 +124,26 @@ export default class PageSelector {
   }
 
   /*
+   * Get the checked value of a checkbox or radio input.
+   */
+  get checked() {
+    const el = this.element;
+    if (el) {
+      return this.element.checked;
+    }
+  }
+
+  /*
+   * Set the checked value of a checkbox or radio input.
+   */
+  set checked(value) {
+    const el = this.element;
+    if (el) {
+      el.checked = value;
+    }
+  }
+
+  /*
    * Get the text value or input value of this selector.
    * If the target element is an INPUT, then this returns
    * the `value` property of that INPUT. Otherwise, it
@@ -201,7 +221,10 @@ export default class PageSelector {
   clickElement(el) {
     switch (el.tagName) {
       case 'INPUT':
-        if (el.type !== 'submit') {
+        if (el.type === 'checkbox' || el.type === 'radio') {
+          return this.simulateAction('click', el);
+        }
+        else if (el.type !== 'submit') {
           return this.simulateAction('focus', el);
         } else {
           return this.simulateAction('submit', el);

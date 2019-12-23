@@ -30,6 +30,7 @@
     "clean": "rimraf dist",
     "test": "jest --watch",
     "test-ci": "jest",
+    "test-debug": "node --inspect-brk node_modules/.bin/jest --runInBand",
     "develop": "yarn build -w",
     "validate": "yarn clean & yarn test-ci & yarn build",
     "prepublish": "yarn build"

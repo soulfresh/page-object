@@ -8,7 +8,8 @@ const selectors = {
   image: 'img',
   form1: '[data-test=form1]',
   form2: '[data-test=form2]',
-  input: 'input',
+  input: '[data-test=textInput]',
+  checkbox: '[data-test=checkbox]',
   normalButton: '[data-test=normalButton]',
   submitButton: '[data-test=submitButton]',
   submitInput: '[data-test=submitInput]',
@@ -56,7 +57,8 @@ describe('PageObject', function() {
           Click Me
         </button>
         <form data-test="form1" onSubmit={onSubmit}>
-          <input type="text" onChange={onChange} onFocus={onFocus} />
+          <input data-test="textInput" type="text" onChange={onChange} onFocus={onFocus} />
+          <input data-test="checkbox" type="checkbox" />
           <input type="submit" data-test="submitInput" value="Submit" />
         </form>
         <form data-test="form2" onSubmit={onSubmit}>
@@ -107,6 +109,20 @@ describe('PageObject', function() {
   it('should be able to set the value of an input element.', () => {
     page.input.value = 'Foo Bar';
     expect(page.input.value).toEqual('Foo Bar');
+  });
+
+  it('should be able to tell if a checkbox is checked', () => {
+    expect(page.checkbox.checked).toEqual(false);
+  });
+
+  describe('after clicking the checkbox', function() {
+    beforeEach(function() {
+      page.checkbox.click();
+    });
+
+    it('should be able to tell that the checkbox is checked', () => {
+      expect(page.checkbox.checked).toBe(true);
+    })
   });
 
   it('should emit the change handler when an input element value is changed.', () => {

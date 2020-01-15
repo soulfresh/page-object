@@ -51,14 +51,15 @@ export default class PageSelector {
 
   /*
    * Get a PageSelector configured to select against the
-   * nth element in root.
+   * nth element in root (0 based nth selector).
    *
    * Example:
    * page.input.nthChild(2).value = 'foo';
    */
   nthChild(index) {
-    const nthChildSelector = `${this.selector}:nth-child(${index})`;
-    return new PageObject(nthChildSelector, this.root);
+    // the CSS nth-child selector is 1 based so we convert to that indexing.
+    const nthChildSelector = `${this.selector}:nth-child(${index + 1})`;
+    return new PageSelector(nthChildSelector, this.root);
   }
 
   /*

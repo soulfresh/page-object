@@ -181,6 +181,7 @@ export default class PageObject {
     return new Proxy(this, {
       get(target, prop, receiver) {
         if (target[prop] !== undefined) {
+        // if (prop in target) {
           if (target.allSelectors[prop]) {
             console.warn(
               `Selector name "${prop}" conflicts with an existing PageObject property.
@@ -188,6 +189,7 @@ export default class PageObject {
             )
           }
           return target[prop];
+          // return Reflect.get(target, prop, receiver);
         } else {
           return new PageSelector(
             getSelector(target, prop),

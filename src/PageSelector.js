@@ -15,7 +15,11 @@ export default class PageSelector {
    * Get the HTMLElement associated with this proxy.
    */
   get element() {
-    return this.root.querySelector(this.selector);
+    if (this.selector) {
+      return this.root.querySelector(this.selector);
+    } else {
+      return this.root;
+    }
   }
 
   /*
@@ -50,16 +54,28 @@ export default class PageSelector {
   }
 
   /*
-   * Get a PageSelector configured to select against the
-   * nth element in root (0 based nth selector).
-   *
-   * Example:
-   * page.input.nthChild(2).value = 'foo';
+   * DEPRECATED - use `nth()` instead.
    */
   nthChild(index) {
     // the CSS nth-child selector is 1 based so we convert to that indexing.
     const nthChildSelector = `${this.selector}:nth-child(${index + 1})`;
     return new PageSelector(nthChildSelector, this.root);
+  }
+
+  /*
+   * Get a PageSelector configured to select against the
+   * nth element matching the selector.
+   *
+   * Example:
+   * const secondInput = page.input.nth(1);
+   *
+   * page.input.nth(1).value = 'foo';
+   *
+   * expect( page.input.nth(2).exists ).toBe(true);
+   */
+  nth(index) {
+    const root = this.allElements[ index ];
+    return new PageSelector(null, root);
   }
 
   /*
@@ -175,9 +191,16 @@ export default class PageSelector {
   }
 
   /*
-   * Get the value/textContent of all direct children.
+   * DEPRECTATED - use `values`
    */
   get childValues() {
+    return this.values;
+  }
+
+  /*
+   * Get the value/textContent of all direct children.
+   */
+  get values() {
     const elements = this.allElements;
     if (elements && elements.length > 0) {
       return Array.from(elements).map((e) => this.getValueForElement(e));
@@ -193,10 +216,16 @@ export default class PageSelector {
     return document.activeElement === this.element;
   }
 
+  /*
+   * Emit a Focus event from the element matching this selector.
+   */
   focus() {
     this.simulateAction('focus', this.element);
   }
 
+  /*
+   * Emit a Blur event from the element matching this selector.
+   */
   blur() {
     this.simulateAction('blur', this.element);
   }
@@ -205,10 +234,10 @@ export default class PageSelector {
    * @private
    * Simulate an action on a specific element.
    */
-  simulateAction(action, element) {
+  simulateAction(action, element, event) {
     const el = element || this.element;
     if (el) {
-      fireEvent[action](el);
+      fireEvent[action](el, event);
       return true;
     }
 

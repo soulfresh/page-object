@@ -15,7 +15,11 @@ export default class PageSelector {
    * Get the HTMLElement associated with this proxy.
    */
   get element() {
-    return this.root.querySelector(this.selector);
+    if (this.selector) {
+      return this.root.querySelector(this.selector);
+    } else {
+      return this.root;
+    }
   }
 
   /*
@@ -60,6 +64,11 @@ export default class PageSelector {
     // the CSS nth-child selector is 1 based so we convert to that indexing.
     const nthChildSelector = `${this.selector}:nth-child(${index + 1})`;
     return new PageSelector(nthChildSelector, this.root);
+  }
+
+  nth(index) {
+    const root = this.allElements[ index ];
+    return new PageSelector(null, root);
   }
 
   /*
@@ -177,7 +186,7 @@ export default class PageSelector {
   /*
    * Get the value/textContent of all direct children.
    */
-  get childValues() {
+  get values() {
     const elements = this.allElements;
     if (elements && elements.length > 0) {
       return Array.from(elements).map((e) => this.getValueForElement(e));
@@ -193,10 +202,16 @@ export default class PageSelector {
     return document.activeElement === this.element;
   }
 
+  /*
+   * Emit a Focus event from the element matching this selector.
+   */
   focus() {
     this.simulateAction('focus', this.element);
   }
 
+  /*
+   * Emit a Blur event from the element matching this selector.
+   */
   blur() {
     this.simulateAction('blur', this.element);
   }
@@ -205,10 +220,10 @@ export default class PageSelector {
    * @private
    * Simulate an action on a specific element.
    */
-  simulateAction(action, element) {
+  simulateAction(action, element, event) {
     const el = element || this.element;
     if (el) {
-      fireEvent[action](el);
+      fireEvent[action](el, event);
       return true;
     }
 

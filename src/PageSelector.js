@@ -54,11 +54,7 @@ export default class PageSelector {
   }
 
   /*
-   * Get a PageSelector configured to select against the
-   * nth element in root (0 based nth selector).
-   *
-   * Example:
-   * page.input.nthChild(2).value = 'foo';
+   * DEPRECATED - use `nth()` instead.
    */
   nthChild(index) {
     // the CSS nth-child selector is 1 based so we convert to that indexing.
@@ -66,6 +62,17 @@ export default class PageSelector {
     return new PageSelector(nthChildSelector, this.root);
   }
 
+  /*
+   * Get a PageSelector configured to select against the
+   * nth element matching the selector.
+   *
+   * Example:
+   * const secondInput = page.input.nth(1);
+   *
+   * page.input.nth(1).value = 'foo';
+   *
+   * expect( page.input.nth(2).exists ).toBe(true);
+   */
   nth(index) {
     const root = this.allElements[ index ];
     return new PageSelector(null, root);
@@ -181,6 +188,13 @@ export default class PageSelector {
       }
     }
     console.error(`${this.selector} does not exist and thus cannot be set to ${value}.`);
+  }
+
+  /*
+   * DEPRECTATED - use `values`
+   */
+  get childValues() {
+    return this.values;
   }
 
   /*

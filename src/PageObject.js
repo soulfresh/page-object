@@ -67,8 +67,11 @@ function getRoot(target) {
  *
  * ```js
  * export const selectors = {
+ *   // Match the element(s) with a `data-test` attribute equal to "myTitle".
  *   title: '[data-test=myTitle]',
+ *   // Match the element(s) with the specified `name` attribute.
  *   form: '[name=myForm]',
+ *   // Match the input element(s) on the page.
  *   input: 'input',
  *   button: 'button.submit',
  *   other: '.other',

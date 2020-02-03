@@ -161,7 +161,7 @@ component instances themselves) because the DOM is how your users interact with
 your application.
 
 This follows the `@testing-library`
-(https://testing-library.com/docs/guiding-principles)[guiding principles].
+[guiding principles](https://testing-library.com/docs/guiding-principles).
 We also stay away from practices like shallow rendering of components
 because they make tests harder to debug, harder to grock and less resiliant to change.
 

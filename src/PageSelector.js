@@ -1,4 +1,4 @@
-import { fireEvent, waitForElement } from '@testing-library/react';
+import { fireEvent, waitForElement, waitForElementToBeRemoved } from '@testing-library/react';
 
 /*
  * An object that is configured to interact with a specific
@@ -270,8 +270,12 @@ export default class PageSelector {
     }
   }
 
-  [ 'await' ]() {
-    return waitForElement(() => this.element);
+  [ 'await' ](options) {
+    return waitForElement(() => this.element, options);
+  }
+
+  awaitRemoval(options) {
+    return waitForElementToBeRemoved(() => this.element, options);
   }
 
   /*
@@ -308,5 +312,17 @@ export default class PageSelector {
   pressEnter() {
    fireEvent.keyDown(this.element, {keyCode: 13});
    fireEvent.keyUp(this.element, {keyCode: 13});
+  }
+
+  get visible() {
+    const style = window.getComputedStyle(this.element);
+
+    // TODO opacity > 0 or not set, visiblility === 'visible' or not set
+    return this.exists && style.display !== 'none';
+  }
+
+  get branchIsVisible() {
+    // TODO follow the tree to see if all parents are visible.
+    return true;
   }
 }

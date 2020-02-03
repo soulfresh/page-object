@@ -409,7 +409,7 @@ The following API is exposed by `PageObject` instances:
   <tbody>
     <tr>
       <td>
-<pre>constructor(
+<pre><b>constructor</b>(
   rootDOM, 
   selectors
 )</pre></td>
@@ -423,9 +423,8 @@ The following API is exposed by `PageObject` instances:
         elements in the DOM you wish to interacte with.
         <br/><br/>
         For example, given the following PageObject:
-        <br/><br/>
+        <br/>
         <pre>let page = new PageObject(rootDiv, {someDiv: '[data-test=someDiv]'})</pre>
-        <br/><br/>
         The property <code>page.someDiv</code> corresponds to an object Proxy
         representing a DOM element with the attribute <code>data-test=someDiv</code>
         inside the div <code>rootDiv</code>.
@@ -433,7 +432,7 @@ The following API is exposed by `PageObject` instances:
     </tr>
     <tr>
       <td>
-<pre>render(
+<pre><b>render</b>(
   jsxDefinition, 
   stylesObject, 
   additionalDOM
@@ -446,25 +445,24 @@ The following API is exposed by `PageObject` instances:
         as global style element. In the following example,
         we can make the text color of all buttons in our test red:
         <br/><br/>
-        <pre>page.render(<Component />, 'button {color: red}'})</pre>
-        <br/><br/>
+        <pre>page.render(&lt;Component /&gt;, 'button {color: red}'})</pre>
         <code>additionaDOM</code> is a string representing additional DOM nodes
         to render inside the sandbox. In the following example,
         a div with the class "loader" is available in the sandbox
         along side <code>Component</code>;
         <br/><br/>
-        <pre>page.render(<Component />, null, '<div class="loader"></div>')</pre>
+        <pre>page.render(<Component />, null, '&lt;div class="loader"&gt;&lt;/div&gt;')</pre>
       </td>
     </tr>
     <tr>
-      <td><code>destroySandbox()</code></td>
+      <td><pre><b>destroySandbox</b>()</pre></td>
       <td>
         Clean up the sandbox DOM element after a test and unmount all
         components.
       </td>
     </tr>
     <tr>
-      <td><code>get root</code></td>
+      <td><pre>get <b>root</b></pre></td>
       <td>
         The root element inside of which this PageObject will select.
         This is the same element passed as the first argument to the constructor.
@@ -475,66 +473,52 @@ The following API is exposed by `PageObject` instances:
       </td>
     </tr>
     <tr>
-      <td><code>get allSelectors</code></td>
+      <td><pre>get <b>allSelectors</b></pre></td>
       <td>
         A list of the selectors this PageObject is configured to interact with.
       </td>
     </tr>
     <tr>
-      <td><code>get selectors</code></td>
+      <td><pre>get <b>selectors</b></pre></td>
       <td>
         A list of selectors that you can modify at runtime. For example,
         you could use this to add or change the selectors your PageObject
         interacts with...
-        <br/><br/>
-        <pre>
-        page.selectors.foo = '[data-test=foo]';
-        page.foo.click();
-        </pre>
+<pre>page.selectors.foo = '[data-test=foo]';
+page.foo.click();</pre>
       </td>
     </tr>
     <tr>
-      <td><code>select(selector)</code></td>
+      <td><pre><b>select</b>(selector)</pre></td>
       <td>
         A generic method for querying the DOM inside of <code>page.root</code>.
-        <br/><br/>
-        Ex:
-        <pre>
-        page.select('[data-test=foo]');
-        // equivalent to:
-        page.root.querySelector('[data-test=foo]');
-        </pre>
+<pre>page.select('[data-test=foo]');
+// equivalent to:
+page.root.querySelector('[data-test=foo]');</pre>
       </td>
     </tr>
     <tr>
-      <td><pre>selectAll(selector)</pre></td>
+      <td><pre><b>selectAll</b>(selector)</pre></td>
       <td>
         A generic method for querying the DOM inside of <code>page.root</code>.
-        <br/><br/>
-        Ex:
-        <pre>
-        page.selectAll('[data-test=foo]');
-        // equivalent to:
-        page.root.querySelectorAll('[data-test=foo]');
-        </pre>
+<pre>page.selectAll('[data-test=foo]');
+// equivalent to:
+page.root.querySelectorAll('[data-test=foo]');</pre>
       </td>
     </tr>
     <tr>
-      <td>submit()</td>
+      <td><pre><b>submit</b>()</pre></td>
       <td>
        Find the first form on the page and simulate a submit event for it.
       </td>
     </tr>
     <tr>
-      <td>findByTestName(testName)</td>
+      <td><pre><b>findByTestName</b>(testName)<pre></td>
       <td>
        Find an element by its `data-test` attribute.
-        <br/>
-       <pre>
-       page.findByTestName('foo');
-       // equivalent to
-       page.root.querySelector('[data-test=foo]');
-       <pre>
+<pre>page.findByTestName('foo');
+// equivalent to
+page.root.querySelector('[data-test=foo]');<pre>
       </td>
     </tr>
   </tbody>

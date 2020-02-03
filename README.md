@@ -408,108 +408,115 @@ The following API is exposed by `PageObject` instances:
   </thead>
   <tbody>
     <tr>
-      <td>constructor(rootDOM, selectors)</td>
       <td>
-        `rootDOM` is an HTMLElement that serves as the root within
+<pre>constructor(
+  rootDOM, 
+  selectors
+)</pre></td>
+      <td>
+        <code>rootDOM</code> is an HTMLElement that serves as the root within
         which this PageObject will search for elements to interact with.
-        Passing `null`, `undefined` or `false` will use the sandbox as
+        Passing <code>null</code>, <code>undefined</code> or <code>false</code> will use the sandbox as
         the root element.
-
-        `selectors` an object of key/value pairs representing
+        <br/><br/>
+        <code>selectors</code> an object of key/value pairs representing
         elements in the DOM you wish to interacte with.
-
+        <br/><br/>
         For example, given the following PageObject:
-
-        `let page = new PageObject(rootDiv, {someDiv: '[data-test=someDiv]'})`
-
-        The property `page.someDiv` corresponds to an object `Proxy`
-        representing a DOM element with the attribute `data-test=someDiv`
-        inside the div `rootDiv`.
+        <br/><br/>
+        <pre>let page = new PageObject(rootDiv, {someDiv: '[data-test=someDiv]'})</pre>
+        <br/><br/>
+        The property <code>page.someDiv</code> corresponds to an object Proxy
+        representing a DOM element with the attribute <code>data-test=someDiv</code>
+        inside the div <code>rootDiv</code>.
       </td>
     </tr>
     <tr>
-      <td>render(jsxDefinition, stylesObject, additionalDOM)</td>
       <td>
-        Render the `jsxDefinition` into the sandbox. This method
+<pre>render(
+  jsxDefinition, 
+  stylesObject, 
+  additionalDOM
+)</pre></td>
+      <td>
+        Render the <code>jsxDefinition</code> into the sandbox. This method
         returns a reference to the sandbox DOM element.
-
-        `stylesObject` is a string that will be applied
-        as global `<style>` element. In the following example,
+        <br/><br/>
+        <code>stylesObject</code> is a string that will be applied
+        as global style element. In the following example,
         we can make the text color of all buttons in our test red:
-
-        `page.render(<Component />, 'button {color: red}'})`
-
-        `additionaDOM` is a string representing additional DOM nodes
+        <br/><br/>
+        <pre>page.render(<Component />, 'button {color: red}'})</pre>
+        <br/><br/>
+        <code>additionaDOM</code> is a string representing additional DOM nodes
         to render inside the sandbox. In the following example,
         a div with the class "loader" is available in the sandbox
-        along side `Component`;
-
-        `page.render(<Component />, null, '<div class="loader"></div>')`
+        along side <code>Component</code>;
+        <br/><br/>
+        <pre>page.render(<Component />, null, '<div class="loader"></div>')</pre>
       </td>
     </tr>
     <tr>
-      <td>destroySandbox()</td>
+      <td><code>destroySandbox()</code></td>
       <td>
         Clean up the sandbox DOM element after a test and unmount all
         components.
       </td>
     </tr>
     <tr>
-      <td>get root</td>
+      <td><code>get root</code></td>
       <td>
         The root element inside of which this PageObject will select.
         This is the same element passed as the first argument to the constructor.
-
+        <br/><br/>
         For legibility, we suggest you don't modify this in the middle of a test
         but instead create new PageObject instances pointing to other
         root elements.
       </td>
     </tr>
     <tr>
-      <td>get allSelectors</td>
+      <td><code>get allSelectors</code></td>
       <td>
         A list of the selectors this PageObject is configured to interact with.
       </td>
     </tr>
     <tr>
-      <td>get selectors</td>
+      <td><code>get selectors</code></td>
       <td>
         A list of selectors that you can modify at runtime. For example,
         you could use this to add or change the selectors your PageObject
         interacts with...
-
-        ```js
+        <br/><br/>
+        <pre>
         page.selectors.foo = '[data-test=foo]';
         page.foo.click();
-        ```
+        </pre>
       </td>
     </tr>
     <tr>
-      <td>select(selector)</td>
+      <td><code>select(selector)</code></td>
       <td>
-        A generic method for querying the DOM inside of `page.root`.
-
+        A generic method for querying the DOM inside of <code>page.root</code>.
+        <br/><br/>
         Ex:
-        ```js
+        <pre>
         page.select('[data-test=foo]');
-
         // equivalent to:
         page.root.querySelector('[data-test=foo]');
-        ```
+        </pre>
       </td>
     </tr>
     <tr>
-      <td>selectAll(selector)</td>
+      <td><pre>selectAll(selector)</pre></td>
       <td>
-        A generic method for querying the DOM inside of `page.root`.
-
+        A generic method for querying the DOM inside of <code>page.root</code>.
+        <br/><br/>
         Ex:
-        ```js
+        <pre>
         page.selectAll('[data-test=foo]');
-
         // equivalent to:
         page.root.querySelectorAll('[data-test=foo]');
-        ```
+        </pre>
       </td>
     </tr>
     <tr>
@@ -522,13 +529,12 @@ The following API is exposed by `PageObject` instances:
       <td>findByTestName(testName)</td>
       <td>
        Find an element by its `data-test` attribute.
-
-       ```js
+        <br/>
+       <pre>
        page.findByTestName('foo');
-
        // equivalent to
        page.root.querySelector('[data-test=foo]');
-       ```
+       <pre>
       </td>
     </tr>
   </tbody>

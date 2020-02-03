@@ -561,19 +561,19 @@ a `PageSelector` whose API is as follows.
   </thead>
   <tbody>
     <tr>
-      <td>get element</td>
+      <td><pre>get <b>element</b></pre></td>
       <td>
         Get the HTMLElement associated with this selector.
       </td>
     </tr>
     <tr>
-      <td>get allElements</td>
+      <td><pre>get <b>allElements</b></pre></td>
       <td>
         Get a list of HTMLElements in the DOM that match the selector for this proxy.
       </td>
     </tr>
     <tr>
-      <td>elementAt(index)</td>
+      <td><pre><b>elementAt(index)</td>
       <td>
         Get an element at a specific index (assuming the current
         selector matches more than one element). If there is only
@@ -584,85 +584,83 @@ a `PageSelector` whose API is as follows.
       </td>
     </tr>
     <tr>
-      <td>nth(index)</td>
+      <td><pre><b>nth(index)</td>
       <td>
         Get a PageSelector configured to select against the
         nth element matching the selector.
-
+        <br/><br/>
         Example:
-        const secondInput = page.input.nth(1);
-
-        page.input.nth(1).value = 'foo';
-
-        expect( page.input.nth(2).exists ).toBe(true);
+<pre>const secondInput = page.input.nth(1);
+page.input.nth(1).value = 'foo';
+expect( page.input.nth(2).exists ).toBe(true);</pre>
       </td>
     </tr>
     <tr>
-      <td>get count</td>
+      <td><pre>get <b>count</b></pre></td>
       <td>
        Count the number of elements in the DOM that match
        this proxy.
       </td>
     </tr>
     <tr>
-      <td>get exists</td>
+      <td><pre>get <b>exists</b></pre></td>
       <td>
        Determine if this proxy exists in the DOM.
       </td>
     </tr>
     <tr>
-      <td>get text</td>
+      <td><pre>get <b>text</b></pre></td>
       <td>
        Get the trimmed text content of this selector.
       </td>
     </tr>
     <tr>
-      <td>get classList</td>
+      <td><pre>get <b>classList</b></pre></td>
       <td>
        Get the classList object for the element matching
        this selector.
       </td>
     </tr>
     <tr>
-      <td>hasClass(className)</td>
+      <td><pre><b>hasClass(className)</td>
       <td>
        Check if the element matching the current selector
        has a specific class name.
-
-       Equivalent to: `page.thing.classList.contains.className`;
+       <br/><br/>
+       Equivalent to: <code>page.thing.classList.contains.className</code>;
       </td>
     </tr>
     <tr>
-      <td>get disabled</td>
+      <td><pre>get <b>disabled</b></pre></td>
       <td>
        Check if the element has a 'disabled' attribute.
       </td>
     </tr>
     <tr>
-      <td>get checked</td>
+      <td><pre>get <b>checked</b></pre></td>
       <td>
        Get the checked value of a checkbox or radio input.
       </td>
     </tr>
     <tr>
-      <td>set checked</td>
+      <td><pre>set <b>checked</b></pre></td>
       <td>
        Set the checked value of a checkbox or radio input.
-
-       Ex: page.thing.checked = true;
+       <br/><br/>
+        Ex: <code>page.thing.checked = true;</code>
       </td>
     </tr>
     <tr>
-      <td>get value</td>
+      <td><pre>get <b>value</b></pre></td>
       <td>
         Get the text value or input value of this selector.
         If the target element is an INPUT, then this returns
-        the `value` property of that INPUT. Otherwise, it
+        the value property of that INPUT. Otherwise, it
         returns the trimmed text content.
       </td>
     </tr>
     <tr>
-      <td>set value</td>
+      <td><pre>set <b>value</b></pre></td>
       <td>
        Set the value of this selector if it points to
        an INPUT element. If the selector points to something
@@ -670,87 +668,92 @@ a `PageSelector` whose API is as follows.
       </td>
     </tr>
     <tr>
-      <td>get values</td>
+      <td><pre>get <b>values</b></pre></td>
       <td>
        Get the value/textContent of all direct children as an array of Strings.
       </td>
     </tr>
     <tr>
-      <td>get focused</td>
+      <td><pre>get <b>focused</b></pre></td>
       <td>
        Determine if the current element has focus in the document.
       </td>
     </tr>
     <tr>
-      <td>focus()</td>
+      <td><pre><b>focus</b>()</pre></td>
       <td>
        Emit a Focus event from the element matching this selector.
       </td>
     </tr>
     <tr>
-      <td>blur()</td>
+      <td><pre><b>blur</b>()</pre></td>
       <td>
        Emit a Blur event from the element matching this selector.
       </td>
     </tr>
     <tr>
-      <td>simulateAction(actionName, element, eventObject)</td>
+      <td>
+<pre><b>simulateAction</b>(
+  actionName, 
+  element, 
+  eventObject
+)</pre></td>
       <td>
        Simulate an action on a specific element. You can simulate any action provided by
-       `@testing-library` fireEvent.
-
-       Ex: page.simulateAction('click', page.thing.element, new CustomEvent());
+       <code>@testing-library fireEvent</code>.
+       <br/><br/>
+        Ex: <code>page.simulateAction('click', page.thing.element, new CustomEvent())</code>
       </td>
     </tr>
     <tr>
-      <td>await(options)</td>
+      <td><pre><b>await</b>(options)</pre></td>
       <td>
         Wait for the element matching the current selector to become visible in the DOM.
         This returns a promise that resolves once the element is rendered or throws if it doesn't appear
-        in the duration specified in options. Under the hood this uses `@testing-library` waitFoElement.
-
+        in the duration specified in options. Under the hood this uses <code>@testing-library waitFoElement</code>.
+        <br/><br/>
         For more details, see (https://testing-library.com/docs/dom-testing-library/api-async#waitforelement)
-
-        Ex: `page.thing.await().then(() => done());`
+        <br/><br/>
+        Ex: <code>page.thing.await().then(() => done())</code>
       </td>
     </tr>
     <tr>
-      <td>awaitRemoval(options)</td>
+      <td><pre><b>awaitRemoval</b>(options)</pre></td>
       <td>
-        Similar to `await` but waits for an element to be removed. Under the hood this uses `@testing-library`
-        `waitForElementToBeRemoved`.
-
+        Similar to <code>await</code> but waits for an element to be removed. Under the hood this uses <code>@testing-library
+        waitForElementToBeRemoved</code>.
+        <br/><br/>
         For more details, see (https://testing-library.com/docs/dom-testing-library/api-async#waitforelementtoberemoved)
-
-        Ex: `page.thing.awaitRemoval().then(() => done());`
+        <br/><br/>
+        Ex: <code>page.thing.awaitRemoval().then(() => done())</code>
       </td>
     </tr>
     <tr>
-      <td>click()</td>
+      <td><pre><b>click</b>()</pre></td>
       <td>
        Click on the first element that matches this selector.
       </td>
     </tr>
     <tr>
-      <td>submit</td>
+      <td><pre><b>submit</b>()</pre></td>
       <td>
         Simulate a submit event on the element matching the current selector.
-
-        Ex: `page.myForm.submit()`;
-
+        <br/><br/>
+        Ex: <code>page.myForm.submit()</code>
+        <br/><br/>
         Since there is usually only one form on a page that can be submitted,
-        PageObject also exposes a `submit` method directly that will find the first
+        PageObject also exposes a <code>submit</code> method directly that will find the first
         form on a page and submit that.
-
-        Ex: `page.submit()`;
+        <br/><br/>
+        Ex: <code>page.submit()</code>
       </td>
     </tr>
     <tr>
-      <td>pressEnter()</td>
+      <td><pre><b>pressEnter</b>()</pre></td>
       <td>
        Press the enter key on the specified element.
-
-       Ex: `page.someInput.pressEnter()`;
+       <br/><br/>
+        Ex: <code>page.someInput.pressEnter()</code>
       </td>
     </tr>
   </tbody>
@@ -759,8 +762,10 @@ a `PageSelector` whose API is as follows.
 
 ### What's happening under the hood?
 
+More docs coming...
+
 ### Other useful strategies
 
 barrel `page-objects` files
 
-(https://kentcdodds.com/blog/making-your-ui-tests-resilient-to-change)[make your tests resiliant].
+[make your tests resiliant](https://kentcdodds.com/blog/making-your-ui-tests-resilient-to-change).

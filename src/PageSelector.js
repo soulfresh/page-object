@@ -1,4 +1,11 @@
-import { fireEvent, waitForElement, waitForElementToBeRemoved } from '@testing-library/react';
+import {
+  fireEvent,
+  waitForElement,
+  waitForElementToBeRemoved,
+} from '@testing-library/react';
+import {
+  getByText,
+} from '@testing-library/dom';
 
 /*
  * An object that is configured to interact with a specific
@@ -312,6 +319,13 @@ export default class PageSelector {
   pressEnter() {
    fireEvent.keyDown(this.element, {keyCode: 13});
    fireEvent.keyUp(this.element, {keyCode: 13});
+  }
+
+  /*
+   * Get an attribute for the element specified.
+   */
+  attribute(name) {
+    return this.element.getAttribute(name);
   }
 
   get visible() {

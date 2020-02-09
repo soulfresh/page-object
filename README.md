@@ -115,7 +115,7 @@ beforeEach(() => {
       // You can use any standard DOM selector to find elements such as class, id or element selectors.
       todoInput: 'input',
 
-      // However, we highly suggest you use a dedicated test selector such as
+      // However, we highly recommend using a dedicated test selector such as
       // `data-test` (ex: `<div data-test="something">`) or `data-testid`.
       saveTodoButton: '[data-test=saveTodoButton]'
 
@@ -347,10 +347,15 @@ import { MyComponentPageObject } from '../my-compnent/MyComponent.page-object';
 export class MyOtherComponentPageObject extends PageObject {
   selectors = myOtherComponentSelectors;
 
-  // You can easily instanciate PageObjects in other PageObjects.
+  // You can easily instantiate PageObjects in other PageObjects.
   get nameInput() {
     const myComponent = new MyComponentPageObject();
     return myComponent.name;
+
+    // Notice that we returned `myComponent.name` as opposed to
+    // `myComponent.name.text`. This gives the PageObject user
+    // the flexibility to interact with `nameInput` methods
+    // like `page.nameInput.exists`.
   }
 
   // Or provide a getter to do access the MyComponentPageObject.
@@ -767,5 +772,7 @@ More docs coming...
 ### Other useful strategies
 
 barrel `page-objects` files
+
+test selectors vs. element text
 
 [make your tests resiliant](https://kentcdodds.com/blog/making-your-ui-tests-resilient-to-change).

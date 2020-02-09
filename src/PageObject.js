@@ -1,5 +1,7 @@
-import { render, unmount, fireEvent } from '@testing-library/react';
+import { render, unmount, fireEvent, configure } from '@testing-library/react';
 import PageSelector from './PageSelector';
+
+configure({testIdAttribute: 'data-test'});
 
 /*
  * Get the provided property on the target
@@ -15,19 +17,11 @@ function getSelector(target, prop) {
     throw new Error(
       `"${target.constructor.name}.selectors" and ` +
       `"${target.constructor.name}.additionalSelectors" do not exist. ` +
-      'Make sure your PageObject defines a selectors property or ' + 
+      'Make sure your PageObject defines a selectors property or ' +
       'passes additional selectors to the constructor.'
     );
   }
-  const selector = target.allSelectors[prop];
-  if (!selector) {
-    throw new Error(
-      `"${target.constructor.name}.selectors.${prop}" does not exist. ` +
-      "Make sure you've defined that selector in your PageObject's selector list. " +
-      'The current selector list is: '
-      , target.allSelectors
-    );
-  }
+  const selector = target.allSelectors[prop] || `[data-test=${prop}]`;
   return selector;
 };
 
@@ -201,6 +195,7 @@ export default class PageObject {
     });
   }
 
+  // TODO Rename root -> element for consistency with PageSelector
   get root() {
     return this._root ? this._root : this.sandbox;
   }
@@ -251,12 +246,14 @@ export default class PageObject {
     this.sandbox.appendChild(this.sandboxApp);
     document.body.appendChild(this.sandbox);
 
-    const {container, rerender, unmount} = render(definition, {
+    const result = render(definition, {
       container: this.sandboxApp,
     });
 
-    this.unmount = unmount;
-    this.rerender = rerender;
+    Object.assign(this, result);
+    // Remove the container property since that's often used
+    // as a selector name.
+    delete this.container;
 
     return this.sandboxApp;
   }

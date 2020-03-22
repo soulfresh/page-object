@@ -256,6 +256,7 @@ export default class PageSelector {
    * Click on a specific element.
    */
   clickElement(el) {
+    // TODO Also simulate mouse up/down events.
     switch (el.tagName) {
       case 'INPUT':
         if (el.type === 'checkbox' || el.type === 'radio') {

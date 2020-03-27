@@ -1,6 +1,6 @@
 {
   "name": "page-o",
-  "version": "0.6.1",
+  "version": "0.6.2",
   "repository": "github:soulfresh/page-object",
   "homepage": "https://github.com/soulfresh/page-object",
   "author": "Marc Wren",
@@ -33,7 +33,7 @@
     "test-ci": "jest",
     "test-debug": "node --inspect-brk node_modules/.bin/jest --runInBand",
     "develop": "yarn build -w",
-    "validate": "yarn clean & yarn test-ci & yarn build",
+    "validate": "yarn clean && yarn test-ci && yarn build",
     "prepublish": "yarn build"
   },
   "dependencies": {},

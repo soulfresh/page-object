@@ -1,6 +1,5 @@
 import {
   fireEvent,
-  wait,
   waitForElement,
   waitForElementToBeRemoved,
 } from '@testing-library/react';

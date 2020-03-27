@@ -1,4 +1,4 @@
-import { render, unmount, fireEvent, configure } from '@testing-library/react';
+import { render, unmount, fireEvent, configure, wait } from '@testing-library/react';
 import PageSelector from './PageSelector';
 
 /*

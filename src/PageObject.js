@@ -1,8 +1,6 @@
 import { render, unmount, fireEvent, configure } from '@testing-library/react';
 import PageSelector from './PageSelector';
 
-configure({testIdAttribute: 'data-test'});
-
 /*
  * Get the provided property on the target
  * PageObject's selector list. If it doesn't

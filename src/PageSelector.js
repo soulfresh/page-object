@@ -1,5 +1,6 @@
 import {
   fireEvent,
+  wait,
   waitForElement,
   waitForElementToBeRemoved,
 } from '@testing-library/react';
@@ -284,6 +285,19 @@ export default class PageSelector {
 
   awaitRemoval(options) {
     return waitForElementToBeRemoved(() => this.element, options);
+  }
+
+  waitFor(test, message = `waitFor timed out waiting for test: `) {
+    const selector = this;
+    return wait(() => {
+      if (!test(selector)) {
+        throw new Error(
+          test.toSource
+            ? message + test.toSource()
+            : message + test.toString()
+        );
+      }
+    });
   }
 
   /*

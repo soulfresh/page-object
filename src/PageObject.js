@@ -321,6 +321,22 @@ export default class PageObject {
     return this.root.querySelector(`[data-test=${testName}]`);
   }
 
+  /**
+   * Wait for the `test` callback to return true.
+   */
+  waitFor(test, message = `waitFor timed out waiting for test: `) {
+    const selector = this;
+    return wait(() => {
+      if (!test(selector)) {
+        throw new Error(
+          test.toSource
+            ? message + test.toSource()
+            : message + test.toString()
+        );
+      }
+    });
+  }
+
   /*
    * Simulate changing the value of an input.
    * @param {string} value

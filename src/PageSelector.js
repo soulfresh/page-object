@@ -287,19 +287,6 @@ export default class PageSelector {
     return waitForElementToBeRemoved(() => this.element, options);
   }
 
-  waitFor(test, message = `waitFor timed out waiting for test: `) {
-    const selector = this;
-    return wait(() => {
-      if (!test(selector)) {
-        throw new Error(
-          test.toSource
-            ? message + test.toSource()
-            : message + test.toString()
-        );
-      }
-    });
-  }
-
   /*
    * Click on the first element that matches this selector.
    */

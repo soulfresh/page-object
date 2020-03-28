@@ -439,4 +439,80 @@ export default class PageObject {
       setTimeout(done, 60);
     });
   }
+
+  /**
+   * Drag and drop one element over another.
+   * @param {HTMLElement} element - the element being dragged.
+   * @param {Number} deltaX - the number of pixes to move the element in the x direction.
+   * @param {Number} deltaY - the number of pixes to move the element in the y direction.
+   * @param {HTMLElement} dropTarget - the target onto which element is being dropped.
+   * @param {Function} done - a callback for once all events have been dispatched.
+   */
+  dragAndDropElement(element, deltaX, deltaY, dropTarget, done) {
+    const defaultOptions = {
+      view: window,
+      bubbles: true,
+      cancelable: true,
+    };
+    const parent = dropTarget ? dropTarget : element.parentElement;
+    let rect = element.getBoundingClientRect();
+    let clientStartX = rect.x;
+    let clientStartY = rect.y;
+    let clientEndX = clientStartX + deltaX;
+    let clientEndY = clientStartY + deltaY;
+
+    // Pin emits a drag start event.
+    let startEvent = new DragEvent('dragstart', {
+      ...defaultOptions,
+      clientX: clientStartX,
+      clientY: clientStartY,
+      screenX: clientStartX,
+      screenY: clientStartY,
+    });
+    element.dispatchEvent(startEvent);
+
+    // parent emits a drag enter event as the pin first moves over the map.
+    let enterEvent = new DragEvent('dragenter', {
+      ...defaultOptions,
+      clientX: clientStartX,
+      clientY: clientStartY,
+      screenX: clientStartX,
+      screenY: clientStartY,
+    });
+    parent.dispatchEvent(enterEvent);
+
+    // parent emits a drag over event as the pin moves over the map.
+    let overEvent = new DragEvent('dragover', {
+      ...defaultOptions,
+      clientX: clientStartX + deltaX/2,
+      clientY: clientStartY + deltaY/2,
+      screenX: clientStartX + deltaX/2,
+      screenY: clientStartY + deltaY/2,
+    });
+    parent.dispatchEvent(overEvent);
+
+    setTimeout(() => {
+      // parent emits a drop event once the pin is dropped.
+      let dropEvent = new DragEvent('drop', {
+        ...defaultOptions,
+        clientX: clientEndX,
+        clientY: clientEndY,
+        screenX: clientEndX,
+        screenY: clientEndY,
+      });
+      parent.dispatchEvent(dropEvent);
+
+      // pin emits a drag end event after being dropped.
+      let endEvent = new DragEvent('dragend', {
+        ...defaultOptions,
+        clientX: clientEndX,
+        clientY: clientEndY,
+        screenX: clientEndX,
+        screenY: clientEndY,
+      });
+      element.dispatchEvent(endEvent);
+
+      setTimeout(done, 60);
+    });
+  }
 }

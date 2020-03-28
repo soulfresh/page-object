@@ -210,4 +210,5 @@ describe('PageObject subclass', function() {
   // clickElement
   // setInputValue
   // findByTestName
+  // dragAndDropElement
 });

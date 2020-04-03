@@ -449,6 +449,9 @@ export default class PageObject {
    * @param {Function} done - a callback for once all events have been dispatched.
    */
   dragAndDropElement(element, deltaX, deltaY, dropTarget, done) {
+    // Seeing intermittent issues with this in Firefox:
+    // https://github.com/react-dnd/react-dnd/issues/714
+    // Use a try catch and then re-trigger the drop event?
     const defaultOptions = {
       view: window,
       bubbles: true,
@@ -491,7 +494,7 @@ export default class PageObject {
     });
     parent.dispatchEvent(overEvent);
 
-    setTimeout(() => {
+    const doDrop = () => {
       // parent emits a drop event once the pin is dropped.
       let dropEvent = new DragEvent('drop', {
         ...defaultOptions,
@@ -513,6 +516,16 @@ export default class PageObject {
       element.dispatchEvent(endEvent);
 
       setTimeout(done, 60);
+    };
+
+    setTimeout(() => {
+      try {
+        doDrop();
+      } catch (error) {
+        console.warn('File drop failed with the following error (see https://github.com/react-dnd/react-dnd/issues/714).', error);
+        console.warn('Attempting drop again....');
+        doDrop();
+      }
     });
   }
 }

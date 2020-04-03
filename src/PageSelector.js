@@ -329,6 +329,14 @@ export default class PageSelector {
     return this.element.getAttribute(name);
   }
 
+  /**
+   * Get the label element with the display text matching the text passed.
+   */
+  labeled(text) {
+    // TODO Get this working.
+    return this.element;
+  }
+
   get visible() {
     const style = window.getComputedStyle(this.element);
 

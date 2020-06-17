@@ -86,6 +86,29 @@ export function makeSelector(selector, root = document.body, index = 0) {
     s.element.click();
   }
 
+  s.forEach = (cb) => {
+    // Select all matching elements
+    // Call the callback for each one with
+    // 1. a selector wrapping the element
+    // 2. the index
+    // 3. the parent selector?
+  }
+
+  // TODO Find a way to deal with nested selectors.
+  // For Example, given:
+  // class Card extends PageObject {}
+  // class CardList extends PageObject {}
+  // class PageWithCards extends PageObject {}
+  //
+  // How do I select:
+  // PageWithCards.CardList.Card(2).title
+  //
+  // It would also be awesome if we could check for the
+  // existance of the root level page selector:
+  // PageWithCards.await --> waits for the root selector to be added to the DOM
+  // PageWithCards.exists --> checks that root is defined
+  // PageWithCards.CardList.exists --> checks that the root element that CardList wraps exists
+
   // return s;
   return new Proxy(s, {
     get(target, prop, receiver) {

@@ -267,6 +267,8 @@ export default class PageObject {
     document.querySelectorAll(`#${this.sandboxIds.root}`)
       .forEach((node) => node.remove());
 
+    if (typeof(this.unmount) === 'function') this.unmount();
+
     if (this.sandbox) {
       this.sandbox = null;
       this.sandboxApp = null;

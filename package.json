@@ -34,7 +34,8 @@
     "test-debug": "node --inspect-brk node_modules/.bin/jest --runInBand",
     "develop": "yarn build -w",
     "validate": "yarn clean && yarn test-ci && yarn build",
-    "prepublish": "yarn build"
+    "prepublish": "yarn build",
+    "release": "./scripts/release"
   },
   "dependencies": {},
   "peerDependencies": {

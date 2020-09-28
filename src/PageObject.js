@@ -1,4 +1,4 @@
-import { render, unmount, fireEvent, configure, wait } from '@testing-library/react';
+import { render, unmount, fireEvent, configure, waitFor } from '@testing-library/react';
 import PageSelector from './PageSelector';
 
 /*
@@ -326,9 +326,9 @@ export default class PageObject {
   /**
    * Wait for the `test` callback to return true.
    */
-  waitFor(test, message = `waitFor timed out waiting for test: `) {
+  waitFor(test, timeout, message = `waitFor timed out waiting for test: `) {
     const selector = this;
-    return wait(() => {
+    return waitFor(() => {
       if (!test(selector)) {
         throw new Error(
           test.toSource
@@ -336,7 +336,7 @@ export default class PageObject {
             : message + test.toString()
         );
       }
-    });
+    }, {timeout});
   }
 
   /*

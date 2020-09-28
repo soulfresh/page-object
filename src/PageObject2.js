@@ -109,7 +109,8 @@ export function makeSelector(selector, root = document.body, index = 0) {
   // PageWithCards.exists --> checks that root is defined
   // PageWithCards.CardList.exists --> checks that the root element that CardList wraps exists
 
-  // return s;
+  // TODO Should be able to specify that some selectors target the body (or other portion of the dom).
+  // This will allow testing components that render content into a portal outside of the main component element.
   return new Proxy(s, {
     get(target, prop, receiver) {
       if (prop in target) {

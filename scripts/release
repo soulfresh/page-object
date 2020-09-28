@@ -25,9 +25,6 @@ if output=$(git status --porcelain) && [ -z "$output" ]; then
   echo '------------------------'
   git push origin master
   git push origin "release/$version"
-  echo '\nDeploying Storybook...'
-  echo '------------------------'
-  yarn deploy-storybook
   echo '\nReady To Publish:'
   echo '-------------------'
   yarn publish --new-version $version

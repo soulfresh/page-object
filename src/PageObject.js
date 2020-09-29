@@ -338,7 +338,7 @@ export default class PageObject {
       }
     }, {
       timeout,
-      onTimeout: error => `${error.message}\n${selector.root}`,
+      onTimeout: error => `${error.message}\n${selector.root.innerHTML}`,
     });
   }
 

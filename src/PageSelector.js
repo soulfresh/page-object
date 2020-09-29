@@ -286,13 +286,13 @@ export default class PageSelector {
       }
     }, {
       timeout,
-      onTimeout: error => `${error.message}\n${selector.root}`,
+      onTimeout: error => `${error.message}\n${selector.root.innerHTML}`,
     });
   }
 
   awaitRemoval(timeout) {
     return waitForElementToBeRemoved(() => this.element, {
-      onTimeout: error => `${error.message}\n${selector.root}`,
+      onTimeout: error => `${error.message}\n${selector.root.innerHTML}`,
       timeout,
     });
   }

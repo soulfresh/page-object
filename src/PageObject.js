@@ -338,7 +338,7 @@ export default class PageObject {
       }
     }, {
       timeout,
-      onTimeout: error => `${error.message}\n${prettyDOM(selector.root.innerHTML)}`,
+      onTimeout: error => `${error.message}\n${prettyDOM(selector.root)}`,
     });
   }
 

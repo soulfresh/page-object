@@ -287,13 +287,13 @@ export default class PageSelector {
       }
     }, {
       timeout,
-      onTimeout: error => `${error.message}\n${prettyDOM(selector.root.innerHTML)}`,
+      onTimeout: error => `${error.message}\n${prettyDOM(selector.root)}`,
     });
   }
 
   awaitRemoval(timeout) {
     return waitForElementToBeRemoved(() => this.element, {
-      onTimeout: error => `${error.message}\n${prettyDOM(selector.root.innerHTML)}`,
+      onTimeout: error => `${error.message}\n${prettyDOM(selector.root)}`,
       timeout,
     });
   }

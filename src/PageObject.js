@@ -1,4 +1,4 @@
-import { render, unmount, fireEvent, configure, waitFor } from '@testing-library/react';
+import { render, unmount, fireEvent, configure, waitFor, prettyDOM } from '@testing-library/react';
 import PageSelector from './PageSelector';
 
 /*
@@ -338,7 +338,7 @@ export default class PageObject {
       }
     }, {
       timeout,
-      onTimeout: error => `${error.message}\n${selector.root.innerHTML}`,
+      onTimeout: error => `${error.message}\n${prettyDOM(selector.root.innerHTML)}`,
     });
   }
 

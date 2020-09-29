@@ -2,6 +2,7 @@ import {
   fireEvent,
   waitForElementToBeRemoved,
   waitFor,
+  prettyDOM,
 } from '@testing-library/react';
 import {
   getByText,
@@ -286,13 +287,13 @@ export default class PageSelector {
       }
     }, {
       timeout,
-      onTimeout: error => `${error.message}\n${selector.root.innerHTML}`,
+      onTimeout: error => `${error.message}\n${prettyDOM(selector.root.innerHTML)}`,
     });
   }
 
   awaitRemoval(timeout) {
     return waitForElementToBeRemoved(() => this.element, {
-      onTimeout: error => `${error.message}\n${selector.root.innerHTML}`,
+      onTimeout: error => `${error.message}\n${prettyDOM(selector.root.innerHTML)}`,
       timeout,
     });
   }

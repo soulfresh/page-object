@@ -336,7 +336,10 @@ export default class PageObject {
             : message + test.toString()
         );
       }
-    }, {timeout});
+    }, {
+      timeout,
+      onTimeout: error => `${error.message}\n${selector.root}`,
+    });
   }
 
   /*

@@ -1,7 +1,7 @@
 import {
   fireEvent,
-  waitForElement,
   waitForElementToBeRemoved,
+  waitFor,
 } from '@testing-library/react';
 import {
   getByText,
@@ -278,12 +278,23 @@ export default class PageSelector {
     }
   }
 
-  [ 'await' ](options) {
-    return waitForElement(() => this.element, options);
+  [ 'await' ](timeout) {
+    const selector = this;
+    return waitFor(() => {
+      if (!selector.element) {
+        throw new Error(`await timed out waiting for ${selector.selector}`);
+      }
+    }, {
+      timeout,
+      onTimeout: error => `${error.message}\n${selector.root}`,
+    });
   }
 
-  awaitRemoval(options) {
-    return waitForElementToBeRemoved(() => this.element, options);
+  awaitRemoval(timeout) {
+    return waitForElementToBeRemoved(() => this.element, {
+      onTimeout: error => `${error.message}\n${selector.root}`,
+      timeout,
+    });
   }
 
   /*

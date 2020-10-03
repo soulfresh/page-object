@@ -1,6 +1,6 @@
 import { render, unmount, fireEvent, prettyDOM } from '@testing-library/react';
 import PageSelector from './PageSelector';
-import { waitFormMe } from './util';
+import { waitForMe } from './util';
 
 
 /*

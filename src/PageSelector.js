@@ -1,12 +1,13 @@
 import {
   fireEvent,
   waitForElementToBeRemoved,
-  waitFor,
   prettyDOM,
 } from '@testing-library/react';
 import {
   getByText,
 } from '@testing-library/dom';
+
+import { waitForMe } from './util';
 
 /*
  * An object that is configured to interact with a specific
@@ -281,14 +282,12 @@ export default class PageSelector {
 
   [ 'await' ](timeout) {
     const selector = this;
-    return waitFor(() => {
+    return waitForMe(() => {
       if (!selector.element) {
-        throw new Error(`await timed out waiting for ${selector.selector}`);
+        const message = `await timed out waiting for ${selector.selector}`;
+        throw new Error(`${message}\n${prettyDOM(selector.root)}`);
       }
-    }, {
-      timeout,
-      onTimeout: error => `${error.message}\n${prettyDOM(selector.root)}`,
-    });
+    }, timeout);
   }
 
   awaitRemoval(timeout) {

@@ -1,5 +1,7 @@
-import { render, unmount, fireEvent, configure, waitFor, prettyDOM } from '@testing-library/react';
+import { render, unmount, fireEvent, prettyDOM } from '@testing-library/react';
 import PageSelector from './PageSelector';
+import { waitFormMe } from './util';
+
 
 /*
  * Get the provided property on the target
@@ -328,18 +330,14 @@ export default class PageObject {
    */
   waitFor(test, timeout, message = `waitFor timed out waiting for test: `) {
     const selector = this;
-    return waitFor(() => {
+    return waitForMe(() => {
       if (!test(selector)) {
-        throw new Error(
-          test.toSource
-            ? message + test.toSource()
-            : message + test.toString()
-        );
+        const message = test.toSource
+          ? message + test.toSource()
+          : message + test.toString()
+        throw new Error(`${message}\n${prettyDOM(selector.root)}`);
       }
-    }, {
-      timeout,
-      onTimeout: error => `${error.message}\n${prettyDOM(selector.root)}`,
-    });
+    }, timeout);
   }
 
   /*

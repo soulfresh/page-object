@@ -332,7 +332,7 @@ export default class PageObject {
     const selector = this;
     return waitForMe(() => {
       if (!test(selector)) {
-        const message = test.toSource
+        message = test.toSource
           ? message + test.toSource()
           : message + test.toString()
         throw new Error(`${message}\n${prettyDOM(selector.root)}`);

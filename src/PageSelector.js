@@ -161,12 +161,13 @@ export default class PageSelector {
 
   /*
    * Set the checked value of a checkbox or radio input.
+   * This will also emit all change events as if the element
+   * was clicked. You can bypass event emission by using
+   * `selector.element.checked = value`.
    */
   set checked(value) {
     const el = this.element;
-    if (el) {
-      el.checked = value;
-    }
+    if (el.checked !== value) this.clickElement(el);
   }
 
   /*
@@ -189,7 +190,11 @@ export default class PageSelector {
     if (el) {
       const tag = el.tagName;
       if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT') {
-        fireEvent.change(el, { target: { value } });
+        if (el.type === 'checkbox') {
+          this.checked = value;
+        } else {
+          fireEvent.change(el, { target: { value: String(value) } });
+        }
         return;
       } else {
         console.error(`Cannot set the value of a non-input element. Tried to set ${this.selector} to ${value}.`);

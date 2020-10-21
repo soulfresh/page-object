@@ -269,6 +269,8 @@ export default class PageObject {
     document.querySelectorAll(`#${this.sandboxIds.root}`)
       .forEach((node) => node.remove());
 
+    // TODO If render was not called, this will throw an error
+    // trying to create a PageSelector for unmount.
     if (typeof(this.unmount) === 'function') this.unmount();
 
     if (this.sandbox) {
@@ -328,14 +330,12 @@ export default class PageObject {
   /**
    * Wait for the `test` callback to return true.
    */
-  waitFor(test, timeout, message = `waitFor timed out waiting for test: `) {
+  waitFor(test, timeout) {
     const selector = this;
     return waitForMe(() => {
       if (!test(selector)) {
-        message = test.toSource
-          ? message + test.toSource()
-          : message + test.toString()
-        throw new Error(`${message}\n${prettyDOM(selector.root)}`);
+        const message = test.toSource ? test.toSource() : test.toString();
+        throw new Error(`waitFor timed out waiting for test: ${message} \n${prettyDOM(selector.root)}`);
       }
     }, timeout);
   }

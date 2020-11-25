@@ -139,6 +139,7 @@ export default class PageSelector {
   getValueForElement(element) {
     if (element) {
       const tag = element.tagName;
+      // TODO For checkboxes (and radio buttons?) this need to return 'checked' not value
       if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT') {
         return element.value;
       } else {

@@ -367,81 +367,258 @@ export default class PageObject {
     element.dispatchEvent(new eventConstructor(eventName, eventOptions));
   }
 
-  /*
-   * Simulate a dragging files over an element by triggering
-   * dragenter and dragover DOM events.
+  /**
+   * Dispatch a clipboard paste event containing the provided
+   * File/Blob objects.
+   * @param {File[]|Blob[]} files - The files being pasted.
+   * @param {HTMLElement} [element] - The element receiving the event.
+   * @param {object} [options] - Any additional options to set on the event.
+   * @param {string} [dropEffect] - The dropEffect of the clipboard DataTransfer object.
+   * @param {string} [effectAllowed] - The effectAllowed of the clipboard DataTransfer object.
    */
-  dragFiles(element, files, x=0, y=0) {
-    const defaultOptions = {
-      view: window,
-      bubbles: true,
-      cancelable: true,
-    };
+  pasteFiles(files, element = document, options, dropEffect, effectAllowed) {
+    element.dispatchEvent(
+      createFilePasteEvent(files, options)
+    );
+  }
 
-    const data = {
-      dropEffect: 'none',
-      effectsAllowed: 'all',
-      types: [ 'Files' ],
-      items: files.map((f) => ({kind: 'file', type: f.type})),
-      files: files,
-    };
+  /**
+   * Dispatch a clipboard paste event containing the provided
+   * urls.
+   * @param {string|string[]} urls - The URLs being pasted.
+   * @param {HTMLElement} [element] - The element receiving the event.
+   * @param {object} [options] - Any additional options to set on the event.
+   * @param {string} [dropEffect] - The dropEffect of the clipboard DataTransfer object.
+   * @param {string} [effectAllowed] - The effectAllowed of the clipboard DataTransfer object.
+   */
+  pasteURLs(urls, element = document, options, dropEffect, effectAllowed) {
+    element.dispatchEvent(
+      createURLPasteEvent(urls, options)
+    );
+  }
 
-    // Use CustomEvent instances so we can configure the dataTransfer object.
-    let enterEvent = new CustomEvent('dragenter', defaultOptions);
-    enterEvent.clientX = x;
-    enterEvent.clientY = y;
-    enterEvent.dataTransfer = data;
-    element.dispatchEvent(enterEvent);
+  /**
+   * Dispatch a clipboard paste event containing the provided
+   * urls.
+   * @param {string|string[]} urls - The URLs being pasted.
+   * @param {HTMLElement} [element] - The element receiving the event.
+   * @param {object} [options] - Any additional options to set on the event.
+   * @param {string} [dropEffect] - The dropEffect of the clipboard DataTransfer object.
+   * @param {string} [effectAllowed] - The effectAllowed of the clipboard DataTransfer object.
+   */
+  pasteText(text, element = document, options, dropEffect, effectAllowed) {
+    element.dispatchEvent(
+      createTextPasteEvent(text, options)
+    );
+  }
 
-    let overEvent = new CustomEvent('dragover', defaultOptions);
-    overEvent.clientX = x;
-    overEvent.clientY = y;
-    overEvent.dataTransfer = data;
-    element.dispatchEvent(overEvent);
+  dragURLs(element, urls, x=0, y=0, done, options) {
+    element.dispatchEvent(
+      createURLDropEvent('dragenter', urls, x, y, options)
+    );
+
+    element.dispatchEvent(
+      createURLDropEvent('dragover', urls, x, y, options)
+    );
+
+    done();
   }
 
   /*
    * Simulate a file drop event by triggering
    * dragenter, dragover and drop DOM events.
+   *
+   * @param {HTMLElement} element - The element to drop onto.
+   * @param {string|string[]} urls - The URL(s) to paste.
+   * @param {number} x - The x location of the drop event.
+   * @param {number} y - The y location of the drop event.
+   * @param {function} done - A callback to call once the drop is completed.
+   * @param {object} options - Any additional event properties you'd like to set.
    */
-  dropFiles(element, files, x=0, y=0, done) {
-    const defaultOptions = {
-      view: window,
-      bubbles: true,
-      cancelable: true,
-    };
-
-    const data = {
-      dropEffect: 'none',
-      effectsAllowed: 'all',
-      types: [ 'Files' ],
-      items: files.map((f) => ({kind: 'file', type: f.type})),
-      files: files,
-    };
-
-    // Use CustomEvent instances so we can configure the dataTransfer object.
-    let enterEvent = new CustomEvent('dragenter', defaultOptions);
-    enterEvent.clientX = x;
-    enterEvent.clientY = y;
-    enterEvent.dataTransfer = data;
-    element.dispatchEvent(enterEvent);
-
-    let overEvent = new CustomEvent('dragover', defaultOptions);
-    overEvent.clientX = x;
-    overEvent.clientY = y;
-    overEvent.dataTransfer = data;
-    element.dispatchEvent(overEvent);
+  dropURLs(element, urls, x=0, y=0, done, options) {
+    this.dragURLs(element, urls, x, y, done, options);
 
     setTimeout(() => {
-      let dropEvent = new CustomEvent('drop', defaultOptions);
-      dropEvent.clientX = x;
-      dropEvent.clientY = y;
-      dropEvent.dataTransfer = data;
-      element.dispatchEvent(dropEvent);
+      element.dispatchEvent(
+        createURLDropEvent('drop', urls, x, y, options)
+      );
 
       setTimeout(done, 60);
     });
   }
+
+  dragText(element, text, x=0, y=0, done, options) {
+    element.dispatchEvent(
+      createTextDropEvent('dragenter', text, x, y, options)
+    );
+
+    element.dispatchEvent(
+      createTextDropEvent('dragover', text, x, y, options)
+    );
+
+    done();
+  }
+
+  /*
+   * Simulate a text drop event by triggering
+   * dragenter, dragover and drop DOM events.
+   *
+   * @param {HTMLElement} element - The element to drop onto.
+   * @param {string} text - The text to drag and drop.
+   * @param {number} x - The x location of the drop event.
+   * @param {number} y - The y location of the drop event.
+   * @param {function} done - A callback to call once the drop is completed.
+   * @param {object} options - Any additional event properties you'd like to set.
+   */
+  dropText(element, text, x=0, y=0, done, options) {
+    this.dragText(element, text, x, y, done, options);
+
+    setTimeout(() => {
+      element.dispatchEvent(
+        createTextDropEvent('drop', text, x, y, options)
+      );
+
+      setTimeout(done, 60);
+    });
+  }
+
+  dragFiles(element, files, x=0, y=0, done, options) {
+    element.dispatchEvent(
+      createFileDropEvent('dragenter', files, x, y, options)
+    );
+
+    element.dispatchEvent(
+      createFileDropEvent('dragover', files, x, y, options)
+    );
+
+    done();
+  }
+
+  /*
+   * Simulate a file drop event by triggering
+   * dragenter, dragover and drop DOM events.
+   *
+   * @param {HTMLElement} element - The element to drop onto.
+   * @param {File|File[]} files - The files to drag and drop.
+   * @param {number} x - The x location of the drop event.
+   * @param {number} y - The y location of the drop event.
+   * @param {function} done - A callback to call once the drop is completed.
+   * @param {object} options - Any additional event properties you'd like to set.
+   */
+  dropFiles(element, files, x=0, y=0, done, options) {
+    this.dragFiles(element, files, x, y, done, options);
+
+    setTimeout(() => {
+      element.dispatchEvent(
+        createFileDropEvent('drop', files, x, y, options)
+      );
+
+      setTimeout(done, 60);
+    });
+  }
+
+  /*
+   * Simulate a dragging files over an element by triggering
+   * dragenter and dragover DOM events.
+   */
+  // dragFiles(element, files, x=0, y=0) {
+  //   const defaultOptions = {
+  //     view: window,
+  //     bubbles: true,
+  //     cancelable: true,
+  //   };
+  //
+  //   const data = {
+  //     dropEffect: 'none',
+  //     effectsAllowed: 'all',
+  //     types: [ 'Files' ],
+  //     items: files.map((f) => ({kind: 'file', type: f.type})),
+  //     files: files,
+  //   };
+  //
+  //   // Use CustomEvent instances so we can configure the dataTransfer object.
+  //   let enterEvent = new CustomEvent('dragenter', defaultOptions);
+  //   enterEvent.clientX = x;
+  //   enterEvent.clientY = y;
+  //   enterEvent.dataTransfer = data;
+  //   element.dispatchEvent(enterEvent);
+  //
+  //   let overEvent = new CustomEvent('dragover', defaultOptions);
+  //   overEvent.clientX = x;
+  //   overEvent.clientY = y;
+  //   overEvent.dataTransfer = data;
+  //   element.dispatchEvent(overEvent);
+  // }
+
+  /*
+   * Simulate a file drop event by triggering
+   * dragenter, dragover and drop DOM events.
+   *
+   * @param {HTMLElement} element - The element to drop onto.
+   * @param {string} text - The text containing the url(s).
+   * @param {number} x - The x location of the drop event.
+   * @param {number} y - The y location of the drop event.
+   * @param {function} done - A callback to call once the drop is completed.
+   * @param {object} options - Any additional event properties you'd like to set.
+   */
+  // dropURLs(element, text, x=0, y=0, done, options) {
+  //   let enterEvent = createURLDropEvent('dragenter', text, x, y, options);
+  //   element.dispatchEvent(enterEvent);
+  //
+  //   let overEvent = createURLDropEvent('dragover', text, x, y, options);
+  //   element.dispatchEvent(overEvent);
+  //
+  //   setTimeout(() => {
+  //     let dropEvent = createURLDropEvent('drop', text, x, y, options);
+  //     element.dispatchEvent(dropEvent);
+  //
+  //     setTimeout(done, 60);
+  //   });
+  // }
+
+
+  /*
+   * Simulate a file drop event by triggering
+   * dragenter, dragover and drop DOM events.
+   */
+  // dropFiles(element, files, x=0, y=0, done) {
+  //   const defaultOptions = {
+  //     view: window,
+  //     bubbles: true,
+  //     cancelable: true,
+  //   };
+  //
+  //   const data = {
+  //     dropEffect: 'none',
+  //     effectsAllowed: 'all',
+  //     types: [ 'Files' ],
+  //     items: files.map((f) => ({kind: 'file', type: f.type})),
+  //     files: files,
+  //   };
+  //
+  //   // Use CustomEvent instances so we can configure the dataTransfer object.
+  //   let enterEvent = new CustomEvent('dragenter', defaultOptions);
+  //   enterEvent.clientX = x;
+  //   enterEvent.clientY = y;
+  //   enterEvent.dataTransfer = data;
+  //   element.dispatchEvent(enterEvent);
+  //
+  //   let overEvent = new CustomEvent('dragover', defaultOptions);
+  //   overEvent.clientX = x;
+  //   overEvent.clientY = y;
+  //   overEvent.dataTransfer = data;
+  //   element.dispatchEvent(overEvent);
+  //
+  //   setTimeout(() => {
+  //     let dropEvent = new CustomEvent('drop', defaultOptions);
+  //     dropEvent.clientX = x;
+  //     dropEvent.clientY = y;
+  //     dropEvent.dataTransfer = data;
+  //     element.dispatchEvent(dropEvent);
+  //
+  //     setTimeout(done, 60);
+  //   });
+  // }
 
   /**
    * Drag and drop one element over another.
@@ -532,3 +709,200 @@ export default class PageObject {
     });
   }
 }
+
+/**
+ * Create the DataTransfer object for a text paste event.
+ * @param {string} text - The text to paste
+ * @param {string} [dropEffect]
+ * @param {string} [effectAllowed]
+ * @return {DataTransfer}
+ */
+function createTextDataTransfer(text, dropEffect = 'none', effectAllowed = 'all') {
+  const dataTransfer = new DataTransfer();
+  dataTransfer.items.add(text, 'text/plain');
+  dataTransfer.dropEffect = dropEffect;
+  dataTransfer.effectAllowed = effectAllowed;
+  return dataTransfer;
+}
+
+/**
+ * Create the DataTransfer object for a URL paste event.
+ * @param {string} text - The text to paste
+ * @param {string} [dropEffect]
+ * @param {string} [effectAllowed]
+ * @return {DataTransfer}
+ */
+function createURLDataTransfer(text, dropEffect = 'none', effectAllowed = 'all') {
+  const dataTransfer = new DataTransfer();
+  dataTransfer.items.add(text, 'text/uri-list');
+  dataTransfer.dropEffect = dropEffect;
+  dataTransfer.effectAllowed = effectAllowed;
+  return dataTransfer;
+}
+
+/**
+ * Create the DataTransfer object for a file paste event.
+ * @param {File|File[]} files - The file(s) to paste.
+ * @param {string} [dropEffect]
+ * @param {string} [effectAllowed]
+ * @return {DataTransfer}
+ */
+function createFileDataTransfer(files, dropEffect = 'none', effectAllowed = 'all') {
+  const dataTransfer = new DataTransfer();
+  files.forEach(file => dataTransfer.items.add(file));
+  dataTransfer.dropEffect = dropEffect;
+  dataTransfer.effectAllowed = effectAllowed;
+  return dataTransfer;
+}
+
+/**
+ * Create a file paste ClipboardEvent.
+ * @param {File|File[]} files - The file(s) being pasted.
+ * @param {object} [options] - Any options you'd like to add to the event object.
+ * @param {string} [dropEffect] - The dropEffect of the clipboard DataTransfer object.
+ * @param {string} [effectAllowed] - The effectAllowed of the clipboard DataTransfer object.
+ * @return {ClipboardEvent}
+ */
+function createFilePasteEvent(
+  files,
+  options,
+  dropEffect = 'none',
+  effectAllowed = 'uninitialized'
+) {
+  files = Array.isArray(files) ? files : [files];
+
+  return new ClipboardEvent('paste', {
+    clipboardData: createFileDataTransfer(files, dropEffect, effectAllowed),
+    ...options
+  });
+}
+
+/**
+ * Create a text paste ClipboardEvent.
+ * @param {string} text - The text to paste.
+ * @param {object} [options] - Any options you'd like to add to the event object.
+ * @param {string} [dropEffect] - The dropEffect of the clipboard DataTransfer object.
+ * @param {string} [effectAllowed] - The effectAllowed of the clipboard DataTransfer object.
+ * @return {ClipboardEvent}
+ */
+function createTextPasteEvent(
+  text,
+  options,
+  dropEffect = 'none',
+  effectAllowed = 'uninitialized'
+) {
+  return new ClipboardEvent('paste', {
+    clipboardData: createTextDataTransfer(text, dropEffect, effectAllowed),
+    ...options,
+  });
+}
+
+/**
+ * Create a URL paste ClipboardEvent.
+ * @param {string|string[]} urls - The URL(s) to paste.
+ * @param {object} [options] - Any options you'd like to add to the event object.
+ * @param {string} [dropEffect] - The dropEffect of the clipboard DataTransfer object.
+ * @param {string} [effectAllowed] - The effectAllowed of the clipboard DataTransfer object.
+ * @return {ClipboardEvent}
+ */
+function createURLPasteEvent(
+  urls,
+  options,
+  dropEffect = 'none',
+  effectAllowed = 'uninitialized'
+) {
+  urls = !Array.isArray(urls)
+    ? urls
+    : urls
+        // text/uri-list lines starting with # are comments.
+        .filter(u => !u.startsWith('#'))
+        // URLs are separated by line.
+        .join('\n');
+
+  return new ClipboardEvent('paste', {
+    clipboardData: createURLDataTransfer(urls, dropEffect, effectAllowed),
+    ...options,
+  });
+}
+
+/**
+ * Create a text drag or drop event.
+ * @param {string} eventType - The name of the event being dispatched (ex. dragstart, drop).
+ * @param {string} text - The text to drag or drop.
+ * @param {number} [x] - The x location of the drag/drop event.
+ * @param {number} [y] - The y location of the drag/drop event.
+ * @param {object} [options] - Any additional options to set on the event.
+ * @return {CustomEvent}
+ */
+function createTextDropEvent(eventType, text, x, y, options) {
+  // Use CustomEvent instances so we can configure the dataTransfer object.
+  const event = new CustomEvent(eventType, {
+    clientX: x,
+    clientY: y,
+    view: window,
+    bubbles: true,
+    cancelable: true,
+    ...options,
+  });
+
+  // For some reason the data transfer doesn't get set
+  // correctly if it is set through the event contructor.
+  event.dataTransfer = createTextDataTransfer(text);
+
+  return event;
+}
+
+/**
+ * Create a URL drag or drop event.
+ * @param {string} eventType - The name of the event being dispatched (ex. dragstart, drop).
+ * @param {string|string[]} urls - The URL(s) to drop.
+ * @param {number} [x] - The x location of the drag/drop event.
+ * @param {number} [y] - The y location of the drag/drop event.
+ * @param {object} [options] - Any additional options to set on the event.
+ * @return {CustomEvent}
+ */
+function createURLDropEvent(eventType, data, x, y, options) {
+  // Use CustomEvent instances so we can configure the dataTransfer object.
+  const event = new CustomEvent(eventType, {
+    clientX: x,
+    clientY: y,
+    view: window,
+    bubbles: true,
+    cancelable: true,
+    ...options,
+  });
+
+  // For some reason the data transfer doesn't get set
+  // correctly if it is set through the event contructor.
+  event.dataTransfer = createURLDataTransfer(data);
+
+  return event;
+}
+
+/**
+ * Create a file drag or drop event.
+ * @param {string} eventType - The name of the event being dispatched (ex. dragstart, drop).
+ * @param {File|File[]} files - The files to drag or drop.
+ * @param {number} [x] - The x location of the drag/drop event.
+ * @param {number} [y] - The y location of the drag/drop event.
+ * @param {object} [options] - Any additional options to set on the event.
+ * @return {CustomEvent}
+ */
+function createFileDropEvent(eventType, files, x, y, options) {
+  // Use CustomEvent instances so we can configure the dataTransfer object.
+  const event = new CustomEvent(eventType, {
+    clientX: x,
+    clientY: y,
+    view: window,
+    bubbles: true,
+    cancelable: true,
+    ...options,
+  });
+
+  // For some reason the data transfer doesn't get set
+  // correctly if it is set through the event contructor.
+  event.dataTransfer = createFileDataTransfer(files);
+
+  return event;
+}
+

@@ -420,8 +420,6 @@ export default class PageObject {
     element.dispatchEvent(
       createURLDropEvent('dragover', urls, x, y, options)
     );
-
-    done();
   }
 
   /*

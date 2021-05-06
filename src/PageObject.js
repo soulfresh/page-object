@@ -412,7 +412,7 @@ export default class PageObject {
     );
   }
 
-  dragURLs(element, urls, x=0, y=0, done, options) {
+  dragURLs(element, urls, x=0, y=0, options) {
     element.dispatchEvent(
       createURLDropEvent('dragenter', urls, x, y, options)
     );
@@ -436,7 +436,7 @@ export default class PageObject {
    * @param {object} options - Any additional event properties you'd like to set.
    */
   dropURLs(element, urls, x=0, y=0, done, options) {
-    this.dragURLs(element, urls, x, y, done, options);
+    this.dragURLs(element, urls, x, y, options);
 
     setTimeout(() => {
       element.dispatchEvent(
@@ -447,7 +447,7 @@ export default class PageObject {
     });
   }
 
-  dragText(element, text, x=0, y=0, done, options) {
+  dragText(element, text, x=0, y=0, options) {
     element.dispatchEvent(
       createTextDropEvent('dragenter', text, x, y, options)
     );
@@ -455,8 +455,6 @@ export default class PageObject {
     element.dispatchEvent(
       createTextDropEvent('dragover', text, x, y, options)
     );
-
-    done();
   }
 
   /*
@@ -471,7 +469,7 @@ export default class PageObject {
    * @param {object} options - Any additional event properties you'd like to set.
    */
   dropText(element, text, x=0, y=0, done, options) {
-    this.dragText(element, text, x, y, done, options);
+    this.dragText(element, text, x, y, options);
 
     setTimeout(() => {
       element.dispatchEvent(
@@ -482,7 +480,7 @@ export default class PageObject {
     });
   }
 
-  dragFiles(element, files, x=0, y=0, done, options) {
+  dragFiles(element, files, x=0, y=0, options) {
     element.dispatchEvent(
       createFileDropEvent('dragenter', files, x, y, options)
     );
@@ -490,8 +488,6 @@ export default class PageObject {
     element.dispatchEvent(
       createFileDropEvent('dragover', files, x, y, options)
     );
-
-    done();
   }
 
   /*
@@ -506,7 +502,7 @@ export default class PageObject {
    * @param {object} options - Any additional event properties you'd like to set.
    */
   dropFiles(element, files, x=0, y=0, done, options) {
-    this.dragFiles(element, files, x, y, done, options);
+    this.dragFiles(element, files, x, y, options);
 
     setTimeout(() => {
       element.dispatchEvent(

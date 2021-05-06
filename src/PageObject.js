@@ -727,6 +727,14 @@ function createTextDataTransfer(text, dropEffect = 'none', effectAllowed = 'all'
  * @return {DataTransfer}
  */
 function createURLDataTransfer(text, dropEffect = 'none', effectAllowed = 'all') {
+  urls = !Array.isArray(urls)
+    ? urls
+    : urls
+        // text/uri-list lines starting with # are comments.
+        .filter(u => !u.startsWith('#'))
+        // URLs are separated by line.
+        .join('\n');
+
   const dataTransfer = new DataTransfer();
   dataTransfer.items.add(text, 'text/uri-list');
   dataTransfer.dropEffect = dropEffect;
@@ -805,14 +813,6 @@ function createURLPasteEvent(
   dropEffect = 'none',
   effectAllowed = 'uninitialized'
 ) {
-  urls = !Array.isArray(urls)
-    ? urls
-    : urls
-        // text/uri-list lines starting with # are comments.
-        .filter(u => !u.startsWith('#'))
-        // URLs are separated by line.
-        .join('\n');
-
   return new ClipboardEvent('paste', {
     clipboardData: createURLDataTransfer(urls, dropEffect, effectAllowed),
     ...options,
@@ -855,7 +855,7 @@ function createTextDropEvent(eventType, text, x, y, options) {
  * @param {object} [options] - Any additional options to set on the event.
  * @return {CustomEvent}
  */
-function createURLDropEvent(eventType, data, x, y, options) {
+function createURLDropEvent(eventType, urls, x, y, options) {
   // Use CustomEvent instances so we can configure the dataTransfer object.
   const event = new CustomEvent(eventType, {
     clientX: x,
@@ -868,7 +868,7 @@ function createURLDropEvent(eventType, data, x, y, options) {
 
   // For some reason the data transfer doesn't get set
   // correctly if it is set through the event contructor.
-  event.dataTransfer = createURLDataTransfer(data);
+  event.dataTransfer = createURLDataTransfer(urls);
 
   return event;
 }

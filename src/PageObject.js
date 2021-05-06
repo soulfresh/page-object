@@ -726,7 +726,7 @@ function createTextDataTransfer(text, dropEffect = 'none', effectAllowed = 'all'
  * @param {string} [effectAllowed]
  * @return {DataTransfer}
  */
-function createURLDataTransfer(text, dropEffect = 'none', effectAllowed = 'all') {
+function createURLDataTransfer(urls, dropEffect = 'none', effectAllowed = 'all') {
   urls = !Array.isArray(urls)
     ? urls
     : urls
@@ -736,7 +736,7 @@ function createURLDataTransfer(text, dropEffect = 'none', effectAllowed = 'all')
         .join('\n');
 
   const dataTransfer = new DataTransfer();
-  dataTransfer.items.add(text, 'text/uri-list');
+  dataTransfer.items.add(urls, 'text/uri-list');
   dataTransfer.dropEffect = dropEffect;
   dataTransfer.effectAllowed = effectAllowed;
   return dataTransfer;

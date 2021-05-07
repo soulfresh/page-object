@@ -831,16 +831,16 @@ function createURLPasteEvent(
 function createTextDropEvent(eventType, text, x, y, options) {
   // Use CustomEvent instances so we can configure the dataTransfer object.
   const event = new CustomEvent(eventType, {
-    clientX: x,
-    clientY: y,
     view: window,
     bubbles: true,
     cancelable: true,
     ...options,
   });
 
-  // For some reason the data transfer doesn't get set
-  // correctly if it is set through the event contructor.
+  // For some reason the following don't get set
+  // correctly when set through the event contructor.
+  event.clientX = x;
+  event.clientY = y;
   event.dataTransfer = createTextDataTransfer(text);
 
   return event;
@@ -858,16 +858,16 @@ function createTextDropEvent(eventType, text, x, y, options) {
 function createURLDropEvent(eventType, urls, x, y, options) {
   // Use CustomEvent instances so we can configure the dataTransfer object.
   const event = new CustomEvent(eventType, {
-    clientX: x,
-    clientY: y,
     view: window,
     bubbles: true,
     cancelable: true,
     ...options,
   });
 
-  // For some reason the data transfer doesn't get set
-  // correctly if it is set through the event contructor.
+  // For some reason the following don't get set
+  // correctly when set through the event contructor.
+  event.clientX = x;
+  event.clientY = y;
   event.dataTransfer = createURLDataTransfer(urls);
 
   return event;
@@ -885,16 +885,16 @@ function createURLDropEvent(eventType, urls, x, y, options) {
 function createFileDropEvent(eventType, files, x, y, options) {
   // Use CustomEvent instances so we can configure the dataTransfer object.
   const event = new CustomEvent(eventType, {
-    clientX: x,
-    clientY: y,
     view: window,
     bubbles: true,
     cancelable: true,
     ...options,
   });
 
-  // For some reason the data transfer doesn't get set
-  // correctly if it is set through the event contructor.
+  // For some reason the following don't get set
+  // correctly when set through the event contructor.
+  event.clientX = x;
+  event.clientY = y;
   event.dataTransfer = createFileDataTransfer(files);
 
   return event;

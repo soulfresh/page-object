@@ -750,6 +750,8 @@ function createURLDataTransfer(urls, dropEffect = 'none', effectAllowed = 'all')
  * @return {DataTransfer}
  */
 function createFileDataTransfer(files, dropEffect = 'none', effectAllowed = 'all') {
+  files = Array.isArray(files) ? files : [files];
+
   const dataTransfer = new DataTransfer();
   files.forEach(file => dataTransfer.items.add(file));
   dataTransfer.dropEffect = dropEffect;
@@ -771,8 +773,6 @@ function createFilePasteEvent(
   dropEffect = 'none',
   effectAllowed = 'uninitialized'
 ) {
-  files = Array.isArray(files) ? files : [files];
-
   return new ClipboardEvent('paste', {
     clipboardData: createFileDataTransfer(files, dropEffect, effectAllowed),
     ...options
